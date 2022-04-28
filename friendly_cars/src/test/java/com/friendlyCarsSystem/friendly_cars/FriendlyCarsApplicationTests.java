@@ -9,5 +9,4 @@ class FriendlyCarsApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
