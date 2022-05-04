@@ -5,14 +5,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * UserController
+ * ClientController
  */
 @RestController
-@RequestMapping("/api/v1/users")
-public class UserController {
+@RequestMapping("/api/v1/clients")
+public class ClientController {
 
     @GetMapping
-    public String sayHello() {
-        return "hello world";
+    public String foobar() {
+        return "foo bar";
     }
 }
