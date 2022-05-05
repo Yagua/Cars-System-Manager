@@ -18,4 +18,7 @@ public interface ClientService {
     Client updateClient(String clientId, Client updatedClient) throws ClientNotFoundException;
     Client partialUpdateClient(String clientId, Map<Object, Object> fields) throws ClientNotFoundException;
     ResponseEntity<String> deletClient(String clientId) throws ClientNotFoundException;
+    //authoritation
+    Client loginClient(String clientName, String clientPassword) throws ClientNotFoundException;
+    Client changePassword(String clientName, String clientPassword) throws ClientNotFoundException;
 }

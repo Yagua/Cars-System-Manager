@@ -13,6 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -54,6 +57,7 @@ public class Vehicle {
         nullable = true,
         columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
     )
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date deliveryDate;
 
     @Column(
@@ -61,6 +65,7 @@ public class Vehicle {
         nullable = true,
         columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
     )
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date timeStamp;
 
     @Column(name = "fabricante", nullable = false, length = 40)
@@ -69,9 +74,9 @@ public class Vehicle {
     @Column(name = "vendedor", nullable = false, length = 40)
     private String sellerName;
 
-    // @JsonBackReference
+    @JsonBackReference
     @ManyToOne(
-        cascade = CascadeType.ALL,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE},
         fetch = FetchType.LAZY
     )
     @JoinColumn(name = "id_factura", nullable = false)

@@ -44,7 +44,12 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public Client createClient(Client client) {
         List<Invoice> invoices = client.getInvoices();
-        invoices.forEach(invoice -> invoice.setClient(client));
+        invoices.forEach(invoice -> {
+            invoice.setClient(client);
+            invoice.getVehicles().forEach(vehicle ->
+                    vehicle.setInvoice(invoice));
+        });
+
         return clientRepository.save(client);
     }
 
@@ -58,7 +63,11 @@ public class ClientServiceImpl implements ClientService {
 
         // searchedClient.setClientId(client.getClientId());
         List<Invoice> invoices = updatedClient.getInvoices();
-        invoices.forEach(invoice -> invoice.setClient(updatedClient));
+        invoices.forEach(invoice -> {
+            invoice.setClient(updatedClient);
+            invoice.getVehicles().forEach(vehicle ->
+                    vehicle.setInvoice(invoice));
+        });
 
         client.setAddress(updatedClient.getAddress());
         client.setPassword(updatedClient.getPassword());
@@ -98,5 +107,27 @@ public class ClientServiceImpl implements ClientService {
                             clientId)));
         clientRepository.delete(client);
         return ResponseEntity.ok(String.format("Client '%s' deleted", clientId));
+    }
+
+    @Override
+    public Client loginClient(String clientName, String clientPassword)
+        throws ClientNotFoundException {
+        Client client = clientRepository.findByUserNameAndPassword(clientName,
+                clientPassword) .orElseThrow(() -> new ClientNotFoundException(
+                        String.format("Client identified with user name '%s' not found",
+                            clientName)));
+        return client;
+    }
+
+    @Override
+    public Client changePassword(String clientName, String clientPassword)
+        throws ClientNotFoundException {
+        Client client = clientRepository.findByUserName(clientName)
+            .orElseThrow(() -> new ClientNotFoundException(
+                        String.format("Client identified with user name '%s' not found",
+                            clientName)));
+        client.setPassword(clientPassword);
+
+        return clientRepository.save(client);
     }
 }
