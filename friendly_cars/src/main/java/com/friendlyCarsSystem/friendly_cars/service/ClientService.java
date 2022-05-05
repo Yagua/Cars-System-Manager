@@ -1,9 +1,10 @@
 package com.friendlyCarsSystem.friendly_cars.service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import com.friendlyCarsSystem.friendly_cars.entity.Client;
+import com.friendlyCarsSystem.friendly_cars.exception.ClientNotFoundException;
 
 import org.springframework.http.ResponseEntity;
 
@@ -12,9 +13,9 @@ import org.springframework.http.ResponseEntity;
  */
 public interface ClientService {
     List<Client> getAllClients();
-    Optional<Client> getClientById(String clientId);
+    Client getClientById(String clientId) throws ClientNotFoundException;
     Client createClient(Client client);
-    Client updateClient(String clientId);
-    Client partialUpdateClient(String clientId);
-    ResponseEntity<String> deletClient(String clientId);
+    Client updateClient(String clientId, Client client) throws ClientNotFoundException;
+    Client partialUpdateClient(String clientId, Map<Object, Object> fields) throws ClientNotFoundException;
+    ResponseEntity<String> deletClient(String clientId) throws ClientNotFoundException;
 }

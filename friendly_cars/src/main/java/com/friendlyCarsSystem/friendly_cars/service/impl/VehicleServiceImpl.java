@@ -1,9 +1,10 @@
 package com.friendlyCarsSystem.friendly_cars.service.impl;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import com.friendlyCarsSystem.friendly_cars.entity.Vehicle;
+import com.friendlyCarsSystem.friendly_cars.exception.VehicleNotFoundException;
 import com.friendlyCarsSystem.friendly_cars.repository.VehicleRepository;
 import com.friendlyCarsSystem.friendly_cars.service.VehicleService;
 
@@ -27,7 +28,8 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Optional<Vehicle> getVehicleById(String vehicleId) {
+    public Vehicle getVehicleById(String vehicleId)
+        throws VehicleNotFoundException {
         // TODO Auto-generated method stub
         return null;
     }
@@ -39,21 +41,23 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Vehicle updateVehicle(String vehicleId) {
+    public Vehicle updateVehicle(String vehicleId, Vehicle vehicle)
+        throws VehicleNotFoundException {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Vehicle partialUpdateVehicle(String vehicleId) {
+    public Vehicle partialUpdateVehicle(String vehicleId, Map<Object, Object> fields)
+        throws VehicleNotFoundException {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public ResponseEntity<String> deletVehicle(String vehicleId) {
+    public ResponseEntity<String> deletVehicle(String vehicleId)
+        throws VehicleNotFoundException {
         // TODO Auto-generated method stub
         return null;
     }
-
 }

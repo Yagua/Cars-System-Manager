@@ -1,9 +1,10 @@
 package com.friendlyCarsSystem.friendly_cars.service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import com.friendlyCarsSystem.friendly_cars.entity.Vehicle;
+import com.friendlyCarsSystem.friendly_cars.exception.VehicleNotFoundException;
 
 import org.springframework.http.ResponseEntity;
 
@@ -12,9 +13,9 @@ import org.springframework.http.ResponseEntity;
  */
 public interface VehicleService {
     List<Vehicle> getAllVehicles();
-    Optional<Vehicle> getVehicleById(String vehicleId);
+    Vehicle getVehicleById(String vehicleId) throws VehicleNotFoundException;
     Vehicle createVehicle(Vehicle vehicle);
-    Vehicle updateVehicle(String vehicleId);
-    Vehicle partialUpdateVehicle(String vehicleId);
-    ResponseEntity<String> deletVehicle(String vehicleId);
+    Vehicle updateVehicle(String vehicleId, Vehicle vehicle) throws VehicleNotFoundException;;
+    Vehicle partialUpdateVehicle(String vehicleId, Map<Object, Object> fields) throws VehicleNotFoundException;;
+    ResponseEntity<String> deletVehicle(String vehicleId) throws VehicleNotFoundException;;
 }

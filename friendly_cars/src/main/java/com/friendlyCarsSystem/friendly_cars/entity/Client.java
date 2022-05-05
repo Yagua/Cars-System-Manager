@@ -7,9 +7,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -63,9 +64,9 @@ public class Client {
     @OneToOne(
         fetch = FetchType.LAZY,
         cascade = CascadeType.ALL,
-        orphanRemoval = true
+        orphanRemoval = true,
+        mappedBy = "client"
     )
-    @JoinColumn(name = "invoice_id", nullable = false)
     private Invoice invoice;
 
     @Column(

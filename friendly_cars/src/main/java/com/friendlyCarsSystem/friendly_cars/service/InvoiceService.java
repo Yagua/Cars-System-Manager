@@ -1,9 +1,10 @@
 package com.friendlyCarsSystem.friendly_cars.service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import com.friendlyCarsSystem.friendly_cars.entity.Invoice;
+import com.friendlyCarsSystem.friendly_cars.exception.InvoiceNotFoundException;
 
 import org.springframework.http.ResponseEntity;
 
@@ -12,9 +13,9 @@ import org.springframework.http.ResponseEntity;
  */
 public interface InvoiceService {
     List<Invoice> getAllInvoices();
-    Optional<Invoice> getInvoiceById(String invoiceId);
+    Invoice getInvoiceById(String invoiceId) throws InvoiceNotFoundException;
     Invoice createInvoice(Invoice invoice);
-    Invoice updateInvoice(String invoiceId);
-    Invoice partialUpdateInvoice(String invoiceId);
-    ResponseEntity<String> deletInvoice(String invoiceId);
+    Invoice updateInvoice(String invoiceId, Invoice invoice) throws InvoiceNotFoundException;
+    Invoice partialUpdateInvoice(String invoiceId, Map<Object, Object> fields) throws InvoiceNotFoundException;
+    ResponseEntity<String> deletInvoice(String invoiceId) throws InvoiceNotFoundException;;
 }

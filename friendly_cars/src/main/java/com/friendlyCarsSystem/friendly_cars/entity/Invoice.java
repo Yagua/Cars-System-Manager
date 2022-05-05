@@ -11,9 +11,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,11 +47,12 @@ public class Invoice {
     @Column(name = "descuento_sobre_total", nullable = true)
     private double discount = 0D;
 
+    @JsonBackReference
     @OneToOne(
         cascade = CascadeType.ALL,
-        fetch = FetchType.LAZY,
-        mappedBy = "invoice"
+        fetch = FetchType.LAZY
     )
+    @JoinColumn(name = "id_cliente", nullable = false)
     private Client client;
 
     @OneToMany(
