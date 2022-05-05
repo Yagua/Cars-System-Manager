@@ -1,5 +1,8 @@
 package com.friendlyCarsSystem.friendly_cars.exception;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
 /**
  * InvoiceNotFoundException
  */

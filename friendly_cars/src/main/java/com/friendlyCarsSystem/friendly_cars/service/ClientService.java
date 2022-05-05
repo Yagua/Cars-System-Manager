@@ -15,7 +15,7 @@ public interface ClientService {
     List<Client> getAllClients();
     Client getClientById(String clientId) throws ClientNotFoundException;
     Client createClient(Client client);
-    Client updateClient(String clientId, Client client) throws ClientNotFoundException;
+    Client updateClient(String clientId, Client updatedClient) throws ClientNotFoundException;
     Client partialUpdateClient(String clientId, Map<Object, Object> fields) throws ClientNotFoundException;
     ResponseEntity<String> deletClient(String clientId) throws ClientNotFoundException;
 }

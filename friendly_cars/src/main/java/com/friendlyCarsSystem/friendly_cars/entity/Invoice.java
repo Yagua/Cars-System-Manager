@@ -12,11 +12,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,8 +49,8 @@ public class Invoice {
     private double discount = 0D;
 
     @JsonBackReference
-    @OneToOne(
-        cascade = CascadeType.ALL,
+    @ManyToOne(
+        cascade = {CascadeType.MERGE, CascadeType.PERSIST},
         fetch = FetchType.LAZY
     )
     @JoinColumn(name = "id_cliente", nullable = false)
@@ -67,6 +68,7 @@ public class Invoice {
         nullable = true,
         columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
     )
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateOfSale;
 
     @Column(
@@ -74,5 +76,6 @@ public class Invoice {
         nullable = true,
         columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
     )
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date timeStamp;
 }

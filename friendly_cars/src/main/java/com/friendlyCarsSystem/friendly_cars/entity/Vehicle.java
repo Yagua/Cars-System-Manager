@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -68,9 +69,11 @@ public class Vehicle {
     @Column(name = "vendedor", nullable = false, length = 40)
     private String sellerName;
 
+    // @JsonBackReference
     @ManyToOne(
         cascade = CascadeType.ALL,
         fetch = FetchType.LAZY
     )
+    @JoinColumn(name = "id_factura", nullable = false)
     private Invoice invoice;
 }

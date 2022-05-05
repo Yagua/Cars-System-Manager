@@ -43,31 +43,33 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client createClient(Client client) {
-        Invoice invoice = client.getInvoice();
-        invoice.setClient(client);
+        List<Invoice> invoices = client.getInvoices();
+        invoices.forEach(invoice -> invoice.setClient(client));
         return clientRepository.save(client);
     }
 
     @Override
-    public Client updateClient(String clientId, Client client)
+    public Client updateClient(String clientId, Client updatedClient)
         throws ClientNotFoundException {
-        Client searchedClient = clientRepository.findById(clientId)
+        Client client = clientRepository.findById(clientId)
             .orElseThrow(() -> new ClientNotFoundException(
                         String.format("Client identified with '%s' not found",
                             clientId)));
 
-        // searchedClient.setInvoice(client.getInvoice());
         // searchedClient.setClientId(client.getClientId());
-        searchedClient.setAddress(client.getAddress());
-        searchedClient.setPassword(client.getPassword());
-        searchedClient.setUserName(client.getUserName());
-        searchedClient.setFirstName(client.getFirstName());
-        searchedClient.setSecondName(client.getSecondName());
-        searchedClient.setPaternalLastName(client.getPaternalLastName());
-        searchedClient.setMaternalLastName(client.getMaternalLastName());
-        searchedClient.setTelephoneNumber(client.getTelephoneNumber());
+        List<Invoice> invoices = updatedClient.getInvoices();
+        invoices.forEach(invoice -> invoice.setClient(updatedClient));
 
-        return clientRepository.save(searchedClient);
+        client.setAddress(updatedClient.getAddress());
+        client.setPassword(updatedClient.getPassword());
+        client.setUserName(updatedClient.getUserName());
+        client.setFirstName(updatedClient.getFirstName());
+        client.setSecondName(updatedClient.getSecondName());
+        client.setPaternalLastName(updatedClient.getPaternalLastName());
+        client.setMaternalLastName(updatedClient.getMaternalLastName());
+        client.setTelephoneNumber(updatedClient.getTelephoneNumber());
+
+        return clientRepository.save(client);
     }
 
     @Override
