@@ -1,0 +1,9 @@
+friendly_cars/bin/
+friendly_cars/build/
+friendly_cars/.classpath
+friendly_cars/.gradle/
+friendly_cars/.project
+friendly_cars/.settings/
+friendly_cars/HELP.md
+
+friendly_cars_frontend/node_modules/

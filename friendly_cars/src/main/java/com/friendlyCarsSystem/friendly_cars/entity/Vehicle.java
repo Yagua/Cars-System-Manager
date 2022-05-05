@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -81,4 +82,12 @@ public class Vehicle {
     )
     @JoinColumn(name = "id_factura", nullable = false)
     private Invoice invoice;
+
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL,
+        fetch = FetchType.LAZY
+    )
+    @JoinColumn(name = "id_imagen", nullable = true)
+    private Image image;
 }
