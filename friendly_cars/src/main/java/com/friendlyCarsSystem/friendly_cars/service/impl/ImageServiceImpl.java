@@ -1,16 +1,18 @@
 package com.friendlyCarsSystem.friendly_cars.service.impl;
 
-import java.io.IOException;
 import java.util.List;
 
 import com.friendlyCarsSystem.friendly_cars.entity.Image;
+import com.friendlyCarsSystem.friendly_cars.entity.Vehicle;
 import com.friendlyCarsSystem.friendly_cars.exception.ImageNotFoundException;
 import com.friendlyCarsSystem.friendly_cars.exception.VehicleNotFoundException;
+import com.friendlyCarsSystem.friendly_cars.repository.ImageRepository;
+import com.friendlyCarsSystem.friendly_cars.repository.VehicleRepository;
 import com.friendlyCarsSystem.friendly_cars.service.ImageService;
-import com.friendlyCarsSystem.friendly_cars.service.VehicleService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -18,53 +20,116 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Service
 public class ImageServiceImpl implements ImageService {
-    private VehicleService vehicleService;
-    private ImageService imageService;
+    private ImageRepository imageRepository;
+    private VehicleRepository vehicleRepository;
 
-    public ImageServiceImpl(VehicleService vehicleService) {
-        this.vehicleService = vehicleService;
-        this.imageService = imageService;
+    public ImageServiceImpl(ImageRepository imageRepository,
+            VehicleRepository vehicleRepository) {
+        this.imageRepository = imageRepository;
+        this.vehicleRepository = vehicleRepository;
     }
 
     @Override
-    public Image getImageById(long imageId) {
-        // TODO Auto-generated method stub
-        return null;
+    public Image getImageById(long imageId) throws ImageNotFoundException {
+        Image image = imageRepository.findById(imageId)
+            .orElseThrow(() -> new ImageNotFoundException(
+                        String.format("Image identified with '%d' not found",
+                            imageId)));
+        return image;
     }
 
     @Override
-    public Image getImageByName(String imageName) {
-        // TODO Auto-generated method stub
-        return null;
+    public Image getImageByName(String imageName) throws ImageNotFoundException {
+        Image image = imageRepository.findByImageName(imageName)
+            .orElseThrow(() -> new ImageNotFoundException(
+                        String.format("Image'%d' not found",
+                            imageName)));
+        return image;
     }
 
     @Override
-    public Image getImageByVehicleId(long vehicleId) {
-        // TODO Auto-generated method stub
-        return null;
+    public Image getImageByVehicleId(long vehicleId) throws VehicleNotFoundException {
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
+            .orElseThrow(() -> new ImageNotFoundException(
+                        String.format("Vehicle identified with '%d' not found",
+                            vehicleId)));
+        return vehicle.getImage();
     }
 
     @Override
     public List<Image> getAllImages() {
-        // TODO Auto-generated method stub
-        return null;
+        return imageRepository.findAll();
     }
 
     @Override
-    public Image saveImage(MultipartFile file) throws IOException {
-        // TODO Auto-generated method stub
-        return null;
+    public Image saveImage(long vehicleId, MultipartFile file) throws Exception {
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
+            .orElseThrow(() -> new ImageNotFoundException(
+                        String.format("Vehicle identified with '%d' not found",
+                            vehicleId)));
+
+        if(vehicle.getImage() != null)
+            throw new Exception(String.format(
+                        "the vehicle '%d' alraedy has an image", vehicleId));
+
+        Image image = prepareImage(file);
+        vehicle.setImage(image);
+        vehicleRepository.save(vehicle);
+        return vehicle.getImage();
     }
 
     @Override
-    public Image updateImage(long vehicleId, MultipartFile file) throws IOException, VehicleNotFoundException {
-        // TODO Auto-generated method stub
-        return null;
+    public Image updateImage(long imageId, MultipartFile file) throws Exception {
+        Image image = imageRepository.findById(imageId)
+            .orElseThrow(() -> new ImageNotFoundException(
+                        String.format("Image identified with '%d' not found",
+                            imageId)));
+        Image newImage = prepareImage(file);
+
+        // image.setVehicle(newImage.getVehicle());
+        // image.setImageId(newImage.getImageId());
+        image.setImageName(newImage.getImageName());
+        image.setImageContent(newImage.getImageContent());
+        image.setImageType(newImage.getImageType());
+
+        return imageRepository.save(image);
     }
 
     @Override
-    public ResponseEntity<String> deleteImage(long vehicleId) throws ImageNotFoundException {
-        // TODO Auto-generated method stub
-        return null;
+    public ResponseEntity<String> deleteImage(long imageId) throws Exception {
+        Image image = imageRepository.findById(imageId)
+            .orElseThrow(() -> new ImageNotFoundException(
+                        String.format("Image identified with '%d' not found",
+                            imageId)));
+
+        Vehicle vehicle = image.getVehicle();
+        vehicle.setImage(null);
+
+        imageRepository.delete(image);
+        return ResponseEntity.ok(String.format("Image '%s' deleted",
+                    image.getImageId()));
+    }
+
+    public Image prepareImage(MultipartFile file) throws Exception {
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+
+        try {
+            if(fileName.contains("..")) {
+                throw new Exception(String.format(
+                            "Filename contains invalid path sequence %s",
+                            fileName));
+            }
+
+            Image image = Image.builder()
+                .imageName(fileName)
+                .imageType(file.getContentType())
+                .imageContent(file.getBytes())
+                .build();
+
+            return image;
+        } catch(Exception e) {
+            throw new Exception(String.format("Could not save file '%s'",
+                        fileName));
+        }
     }
 }

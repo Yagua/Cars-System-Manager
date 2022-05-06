@@ -1,6 +1,5 @@
 package com.friendlyCarsSystem.friendly_cars.service;
 
-import java.io.IOException;
 import java.util.List;
 
 import com.friendlyCarsSystem.friendly_cars.entity.Image;
@@ -14,11 +13,11 @@ import org.springframework.web.multipart.MultipartFile;
  * ImageService
  */
 public interface ImageService {
-    Image getImageById(long imageId);
-    Image getImageByName(String imageName);
-    Image getImageByVehicleId(long vehicleId);
+    Image getImageById(long imageId) throws ImageNotFoundException;
+    Image getImageByName(String imageName) throws ImageNotFoundException;
+    Image getImageByVehicleId(long vehicleId) throws VehicleNotFoundException;
     List<Image> getAllImages();
-    Image saveImage(MultipartFile file) throws IOException;
-    Image updateImage(long vehicleId, MultipartFile file) throws IOException, VehicleNotFoundException;
-    ResponseEntity<String> deleteImage(long vehicleId) throws ImageNotFoundException;
+    Image saveImage(long vehicleId, MultipartFile file) throws Exception;
+    Image updateImage(long imageId, MultipartFile file) throws Exception;
+    ResponseEntity<String> deleteImage(long imageId) throws Exception;
 }
