@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
+import Accordion from 'react-bootstrap/Accordion'
 import VehicleService from '../service/VehicleService'
 import defCarImg from '../img/defCarImg.png'
 
@@ -21,7 +22,7 @@ const VehicleListComponent = (props) => {
     const renderContent = () => {
         if(!isLoaded) return <></>
         return (
-            <div className="m-4 row">
+            <div className="m-2 row d-flex justify-content-center" style={{backgroundColor: "#EDE7EF"}}>
                 {vehicles.map((vehicle) => {
                     let imgSrc = vehicle.image
                         ? `data:${vehicle.image.imageType};base64,${vehicle.image.imageContent}`
@@ -29,38 +30,49 @@ const VehicleListComponent = (props) => {
                     let imgAlt = vehicle.image ? vehicle.image.imageName : "default.png"
 
                     return (
-                        <div className="card m-3" style={{width: "18rem"}}>
+                        <div className="card m-3 p-0" style={{width: "18rem", height: "100%"}}>
                              <img src={imgSrc}
                                 className="card-img-top" alt={imgAlt}
                                 style={{height: "12rem", objectFit: "cover"}}
                             />
                              <div className="card-body">
-
-                                 <div className="accordion accordion-flush" id="accordionFlushExample">
-                                   <div className="accordion-item">
-                                     <h2 className="accordion-header" id="flush-headingOne">
-                                       <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                                         Accordion Item #1
-                                       </button>
-                                     </h2>
-                                     <div id="flush-collapseOne" className="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                                       <div className="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
-                                     </div>
-                                   </div>
-                                   <div className="accordion-item"></div>
+                                 <Accordion flush>
+                                   <Accordion.Item eventKey={vehicle.vehicleId}>
+                                     <Accordion.Header>
+                                         <h5 className="fst-italic">{vehicle.vehicleName}</h5>
+                                     </Accordion.Header>
+                                     <Accordion.Body>
+                                        <ul className="list-group list-group-flush">
+                                          <li className="list-group-item px-0" key={`lit-${vehicle.vehicleId}-0`}>
+                                            <span className="fw-bold">Modelo: </span>{vehicle.model}
+                                          </li>
+                                          <li className="list-group-item px-0" key={`lit-${vehicle.vehicleId}-1`}>
+                                            <span className="fw-bold">Disponible: </span>{`${vehicle.available ? "Si" : "No"}`}
+                                          </li>
+                                          <li className="list-group-item px-0" key={`lit-${vehicle.vehicleId}-2`}>
+                                            <span className="fw-bold">Peso: </span>{vehicle.vehicleWeight} Kg
+                                          </li>
+                                          <li className="list-group-item px-0" key={`lit-${vehicle.vehicleId}-3`}>
+                                            <span className="fw-bold">Lugar de Fabricación: </span>{vehicle.placeOfManufacture}
+                                          </li>
+                                          <li className="list-group-item px-0" key={`lit-${vehicle.vehicleId}-4`}>
+                                            <span className="fw-bold">Numero de Puertas: </span>{vehicle.numberOfDoors}
+                                          </li>
+                                          <li className="list-group-item px-0" key={`lit-${vehicle.vehicleId}-5`}>
+                                            <span className="fw-bold">Fabricante: </span>{vehicle.manufacturer}
+                                          </li>
+                                          <li className="list-group-item px-0" key={`lit-${vehicle.vehicleId}-6`}>
+                                            <span className="fw-bold">Vendedor: </span>{vehicle.sellerName}
+                                          </li>
+                                        </ul>
+                                     </Accordion.Body>
+                                   </Accordion.Item>
+                                   <Accordion.Item></Accordion.Item>
+                                 </Accordion>
+                                 <div className = "d-flex justify-content-center">
+                                     <Link to = "/home" className="btn btn-primary mt-3"
+                                     >Agregar a Carrito</Link>
                                  </div>
-
-                                 <h4 className="card-title text-center">{vehicle.model}</h4>
-                                    <ul className="list-group list-group-flush">
-                                      <li className="list-group-item px-0">
-                                        <span className="fw-bold">Disponible: </span>{`${vehicle.available ? "Si" : "No"}`}
-                                      </li>
-                                      <li className="list-group-item px-0">A second item</li>
-                                      <li className="list-group-item px-0">A third item</li>
-                                      <li className="list-group-item px-0">A fourth item</li>
-                                      <li className="list-group-item px-0">And a fifth one</li>
-                                    </ul>
-                                 <a href="#" className="btn btn-primary my-2">Go somewhere</a>
                              </div>
                         </div>
                     );

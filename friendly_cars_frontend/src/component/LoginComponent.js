@@ -33,7 +33,7 @@ const LoginComponent = (props) => {
     return (
         <div>
             <header>
-                <nav className = "navbar navbar-expand-md" style={{backgroundColor: "#FB5607"}}>
+                <nav className = "navbar navbar-expand-md" style={{backgroundColor: "#4A306D"}}>
                     <h2 style={{color: "White", margin: "auto"}}>Pagina de Ingreso</h2>
                 </nav>
             </header>

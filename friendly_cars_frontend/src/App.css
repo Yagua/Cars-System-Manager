@@ -4,8 +4,19 @@
  * #73937E
  * #8338EC
  * #283044
+ *
+ * #EDE7EF
  */
 
 .navbar {
-    background-color: #FB5607;
+    background-color: #4A306D;
+}
+
+#root {
+    background-color: #EDE7EF;
+}
+
+html, body {
+    background-color: #EDE7EF;
+    height: 100%;
 }
