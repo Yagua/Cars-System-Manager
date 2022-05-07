@@ -12,11 +12,15 @@ const HeaderComponent = (props) => {
 
 
                 <Dropdown className="mx-3">
-                <Link to = "/home" className = "btn btn-primary mx-3">
-                    <i class="bi bi-cart2"></i>
-                </Link>
+
+                  {props.onHome &&
+                    <Link to = "/home" className = "btn btn-primary mx-3">
+                        <i class="bi bi-cart2"></i>
+                    </Link>
+                  }
+
                   <Dropdown.Toggle id="dropdown-basic">
-                    <i className="bi bi-card-list"> </i>
+                    <i className="bi bi-card-list"></i>
                   </Dropdown.Toggle>
 
                   <Dropdown.Menu>

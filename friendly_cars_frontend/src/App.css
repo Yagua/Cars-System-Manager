@@ -16,7 +16,10 @@
     background-color: #EDE7EF;
 }
 
-html, body {
+html body {
     background-color: #EDE7EF;
+}
+
+html {
     height: 100%;
 }

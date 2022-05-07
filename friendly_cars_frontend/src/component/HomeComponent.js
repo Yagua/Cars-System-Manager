@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom'
 import HeaderComponent from '../component/HeaderComponent'
 import ClientService from '../service/ClientService'
 import VehicleListComponent from '../component/VehicleListComponent'
-import FooterComponent from '../component/FooterComponent'
 
 const HomeComponent = () => {
     let [client, setClient] = useState({});
@@ -30,7 +29,6 @@ const HomeComponent = () => {
                     <HeaderComponent onHome = {true}/>
                 </div>
                 <VehicleListComponent />
-                <FooterComponent />
             </div>
         );
     }
