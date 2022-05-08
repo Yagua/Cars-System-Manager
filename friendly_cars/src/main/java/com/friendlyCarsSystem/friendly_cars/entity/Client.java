@@ -1,15 +1,14 @@
 package com.friendlyCarsSystem.friendly_cars.entity;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -61,13 +60,21 @@ public class Client {
     @Column(name = "contrasena_usuario", nullable = false, length = 50)
     private String password;
 
-    @OneToMany(
-        fetch = FetchType.LAZY,
-        cascade = CascadeType.ALL,
+    // @OneToMany(
+    //     fetch = FetchType.LAZY,
+    //     cascade = CascadeType.ALL,
+    //     orphanRemoval = true,
+    //     mappedBy = "client"
+    // )
+    // private List<Invoice> invoices = new ArrayList<>();
+
+    @OneToOne(
+        fetch = FetchType.EAGER,
         orphanRemoval = true,
-        mappedBy = "client"
+        cascade = CascadeType.ALL
     )
-    private List<Invoice> invoices = new ArrayList<>();
+    @JoinColumn(name = "shopping_cart_id")
+    private ShoppingCart shoppingCart = new ShoppingCart();
 
     @Column(
         name = "fecha_creacion",

@@ -7,6 +7,7 @@ import com.friendlyCarsSystem.friendly_cars.entity.Vehicle;
 import com.friendlyCarsSystem.friendly_cars.exception.VehicleNotFoundException;
 import com.friendlyCarsSystem.friendly_cars.service.VehicleService;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;

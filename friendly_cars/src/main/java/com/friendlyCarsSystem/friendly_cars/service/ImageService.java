@@ -19,5 +19,6 @@ public interface ImageService {
     List<Image> getAllImages();
     Image saveImage(long vehicleId, MultipartFile file) throws Exception;
     Image updateImage(long imageId, MultipartFile file) throws Exception;
+    Image updateImageByVehicleId(long vehicleId, MultipartFile file) throws Exception;
     ResponseEntity<String> deleteImage(long imageId) throws Exception;
 }

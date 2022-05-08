@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.friendlyCarsSystem.friendly_cars.entity.Client;
 import com.friendlyCarsSystem.friendly_cars.entity.Invoice;
+import com.friendlyCarsSystem.friendly_cars.entity.ShoppingCart;
 import com.friendlyCarsSystem.friendly_cars.exception.ClientNotFoundException;
 import com.friendlyCarsSystem.friendly_cars.repository.ClientRepository;
 import com.friendlyCarsSystem.friendly_cars.service.ClientService;
@@ -43,9 +44,14 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client createClient(Client client) {
-        List<Invoice> invoices = client.getInvoices();
+        ShoppingCart cart = client.getShoppingCart();
+
+        if(cart == null) client.setShoppingCart(new ShoppingCart());
+
+        cart.setClient(client);
+        List<Invoice> invoices = cart.getInvoices();
         invoices.forEach(invoice -> {
-            invoice.setClient(client);
+            invoice.setShoppingCart(cart);
             invoice.getVehicles().forEach(vehicle ->
                     vehicle.setInvoice(invoice));
         });
@@ -62,13 +68,7 @@ public class ClientServiceImpl implements ClientService {
                             clientId)));
 
         // searchedClient.setClientId(client.getClientId());
-        List<Invoice> invoices = updatedClient.getInvoices();
-        invoices.forEach(invoice -> {
-            invoice.setClient(updatedClient);
-            invoice.getVehicles().forEach(vehicle ->
-                    vehicle.setInvoice(invoice));
-        });
-
+        client.setShoppingCart(updatedClient.getShoppingCart());
         client.setAddress(updatedClient.getAddress());
         client.setPassword(updatedClient.getPassword());
         client.setUserName(updatedClient.getUserName());
@@ -113,7 +113,7 @@ public class ClientServiceImpl implements ClientService {
     public Client loginClient(String clientName, String clientPassword)
         throws ClientNotFoundException {
         Client client = clientRepository.findByUserNameAndPassword(clientName,
-                clientPassword) .orElseThrow(() -> new ClientNotFoundException(
+                clientPassword).orElseThrow(() -> new ClientNotFoundException(
                         String.format("Client identified with user name '%s' not found",
                             clientName)));
         return client;

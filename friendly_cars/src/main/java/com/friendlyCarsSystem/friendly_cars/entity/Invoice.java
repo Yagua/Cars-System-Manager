@@ -16,7 +16,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
@@ -48,17 +47,16 @@ public class Invoice {
     @Column(name = "descuento_sobre_total", nullable = true)
     private double discount = 0D;
 
-    @JsonBackReference
     @ManyToOne(
         cascade = {CascadeType.MERGE, CascadeType.PERSIST},
-        fetch = FetchType.LAZY
+        fetch = FetchType.EAGER
     )
-    @JoinColumn(name = "id_cliente", nullable = false)
-    private Client client;
+    @JoinColumn(name = "id_shopping_cart", nullable = false)
+    private ShoppingCart shoppingCart;
 
     @OneToMany(
         cascade = CascadeType.ALL,
-        fetch = FetchType.LAZY,
+        fetch = FetchType.EAGER,
         mappedBy = "invoice"
     )
     private List<Vehicle> vehicles = new ArrayList<>();

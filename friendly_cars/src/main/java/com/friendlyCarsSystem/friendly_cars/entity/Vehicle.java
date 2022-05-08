@@ -16,6 +16,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,6 +38,9 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_vehiculo")
     private long vehicleId;
+
+    @Column(name = "nombre_vehiculo", nullable = false, length = 50)
+    private String vehicleName;
 
     @Column(name = "modelo", nullable = false, length = 30)
     private String model;
@@ -78,7 +82,7 @@ public class Vehicle {
     @JsonBackReference
     @ManyToOne(
         cascade = {CascadeType.PERSIST, CascadeType.MERGE},
-        fetch = FetchType.LAZY
+        fetch = FetchType.EAGER
     )
     @JoinColumn(name = "id_factura", nullable = false)
     private Invoice invoice;
@@ -86,7 +90,7 @@ public class Vehicle {
     @OneToOne(
         orphanRemoval = true,
         cascade = CascadeType.ALL,
-        fetch = FetchType.LAZY
+        fetch = FetchType.EAGER
     )
     @JoinColumn(name = "id_imagen", nullable = true)
     private Image image;

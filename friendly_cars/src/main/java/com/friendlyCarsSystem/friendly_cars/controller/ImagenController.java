@@ -59,6 +59,12 @@ public class ImagenController {
         return imageService.updateImage(imageId, file);
     }
 
+    @PutMapping("/vh/{vehicleId}")
+    public Image updateImageByVehicleId(@PathVariable long vehicleId,
+            @RequestParam("file") MultipartFile file) throws Exception {
+        return imageService.updateImageByVehicleId(vehicleId, file);
+    }
+
     @DeleteMapping("/{imageId}")
     public ResponseEntity<String> deleteImage(@PathVariable long imageId)
         throws Exception {
