@@ -4,11 +4,12 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-import com.friendlyCarsSystem.friendly_cars.entity.Invoice;
+import com.friendlyCarsSystem.friendly_cars.entity.Image;
+import com.friendlyCarsSystem.friendly_cars.entity.ShoppingCart;
 import com.friendlyCarsSystem.friendly_cars.entity.Vehicle;
-import com.friendlyCarsSystem.friendly_cars.exception.InvoiceNotFoundException;
+import com.friendlyCarsSystem.friendly_cars.exception.ShoppingCartNotFoundException;
 import com.friendlyCarsSystem.friendly_cars.exception.VehicleNotFoundException;
-import com.friendlyCarsSystem.friendly_cars.repository.InvoiceRepository;
+import com.friendlyCarsSystem.friendly_cars.repository.ShoppingCartRepository;
 import com.friendlyCarsSystem.friendly_cars.repository.VehicleRepository;
 import com.friendlyCarsSystem.friendly_cars.service.VehicleService;
 
@@ -23,12 +24,12 @@ import org.springframework.util.ReflectionUtils;
 public class VehicleServiceImpl implements VehicleService {
 
     private VehicleRepository vehicleRepository;
-    private InvoiceRepository invoiceRepository;
+    private ShoppingCartRepository shoppingCartRepository;
 
     public VehicleServiceImpl(VehicleRepository vehicleRepository,
-            InvoiceRepository invoiceRepository) {
+            ShoppingCartRepository shoppingCartRepository) {
         this.vehicleRepository = vehicleRepository;
-        this.invoiceRepository = invoiceRepository;
+        this.shoppingCartRepository = shoppingCartRepository;
     }
 
     @Override
@@ -47,25 +48,19 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public List<Vehicle> getAllVehiclesByInvoiceId(long invoiceId)
-        throws InvoiceNotFoundException {
-        Invoice invoice = invoiceRepository.findById(invoiceId)
-            .orElseThrow(() -> new InvoiceNotFoundException(
-                        String.format("Invoice identified with '%s' not found",
-                            invoiceId)));
-        return invoice.getVehicles();
+    public List<Vehicle> getAllVehiclesByShoppingCartId(long shoppingCartId)
+        throws ShoppingCartNotFoundException {
+        ShoppingCart cart = shoppingCartRepository.findById(shoppingCartId)
+            .orElseThrow(() -> new ShoppingCartNotFoundException(
+                        String.format("Shopping Cart identified with '%d' not found",
+                            shoppingCartId)));
+        return cart.getVehicles();
     }
 
     @Override
-    public Vehicle createVehicle(Vehicle vehicle, long invoiceId)
-        throws InvoiceNotFoundException {
-        Invoice invoice = invoiceRepository.findById(invoiceId)
-            .orElseThrow(() -> new InvoiceNotFoundException(
-                        String.format("Invoice identified with '%s' not found",
-                            invoiceId)));
-        List<Vehicle> vehicles = invoice.getVehicles();
-        vehicles.add(vehicle);
-        vehicle.setInvoice(invoice);
+    public Vehicle createVehicle(Vehicle vehicle) {
+        Image image = vehicle.getImage();
+        if(image != null) image.setVehicle(vehicle);
         return vehicleRepository.save(vehicle);
     }
 
@@ -78,6 +73,8 @@ public class VehicleServiceImpl implements VehicleService {
                             vehicleId)));
 
         // vehicle.setInvoice(updatedVehicle.getInvoice());
+        ShoppingCart cart = updatedVehicle.getShoppingCart();
+        if(cart != null) vehicle.setShoppingCart(cart);
         vehicle.setModel(updatedVehicle.getModel());
         vehicle.setAvailable(updatedVehicle.isAvailable());
         vehicle.setSellerName(updatedVehicle.getSellerName());
@@ -108,7 +105,7 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public ResponseEntity<String> deletVehicle(long vehicleId)
+    public ResponseEntity<String> deleteVehicle(long vehicleId)
         throws VehicleNotFoundException {
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
             .orElseThrow(() -> new VehicleNotFoundException(
@@ -116,5 +113,21 @@ public class VehicleServiceImpl implements VehicleService {
                             vehicleId)));
         vehicleRepository.delete(vehicle);
         return ResponseEntity.ok(String.format("Vehicle '%d' deleted", vehicleId));
+    }
+
+    @Override
+    public Vehicle addVehicleToShoppingCart(long shoppingCartId,
+            long vehicleId) throws Exception {
+        ShoppingCart cart = shoppingCartRepository.findById(shoppingCartId)
+            .orElseThrow(() -> new ShoppingCartNotFoundException(
+                        String.format("Shopping Cart identified with '%d' not found",
+                            shoppingCartId)));
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
+            .orElseThrow(() -> new VehicleNotFoundException(
+                        String.format("Vehicle Identified with '%s' not found",
+                            vehicleId)));
+        vehicle.setShoppingCart(cart);
+        cart.getVehicles().add(vehicle);
+        return vehicleRepository.save(vehicle);
     }
 }

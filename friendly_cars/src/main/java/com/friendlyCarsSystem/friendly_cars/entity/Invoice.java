@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -13,9 +14,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
@@ -47,19 +48,17 @@ public class Invoice {
     @Column(name = "descuento_sobre_total", nullable = true)
     private double discount = 0D;
 
+    @ElementCollection
+    private List<Vehicle> vehicles = new ArrayList<>();
+
+    @JsonBackReference
     @ManyToOne(
         cascade = {CascadeType.MERGE, CascadeType.PERSIST},
-        fetch = FetchType.EAGER
+        fetch = FetchType.LAZY,
+        optional = false
     )
-    @JoinColumn(name = "id_shopping_cart", nullable = false)
-    private ShoppingCart shoppingCart;
-
-    @OneToMany(
-        cascade = CascadeType.ALL,
-        fetch = FetchType.EAGER,
-        mappedBy = "invoice"
-    )
-    private List<Vehicle> vehicles = new ArrayList<>();
+    @JoinColumn(name = "id_cliente")
+    private Client client;
 
     @Column(
         name = "fecha_venta",

@@ -24,4 +24,5 @@ public interface ShoppingCartService {
     ResponseEntity<String> deleteShoppingCart(long shoppingCartId)
             throws ShoppingCartNotFoundException;
     ShoppingCart createShoppingCart(String clientId, ShoppingCart shoppingCart) throws ClientNotFoundException;
+    ShoppingCart dropVehicleOfShoppingCart(long shoppingCartId, long vehicleId) throws Exception;
 }

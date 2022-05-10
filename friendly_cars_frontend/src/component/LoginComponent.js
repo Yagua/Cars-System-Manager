@@ -21,6 +21,7 @@ const LoginComponent = (props) => {
                 localStorage.setItem("loggedClientId", response.clientId)
                 localStorage.setItem("isClientAthenticated", true)
                 localStorage.setItem("userName", response.userName)
+                localStorage.setItem("shoppingCartId", response.shoppingCart.cartId)
                 setClientFound(true)
                 navigate(`/home`)
             })

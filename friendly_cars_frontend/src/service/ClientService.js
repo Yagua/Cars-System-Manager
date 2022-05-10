@@ -29,7 +29,7 @@ class ClientService {
     }
 
     deleteClient(clientId) {
-        return axios.delete(CLIENT_BASE_URL + `/${clientId}`, clientId)
+        return axios.delete(CLIENT_BASE_URL + `/${clientId}`)
             .then(response => response.data)
     }
 }

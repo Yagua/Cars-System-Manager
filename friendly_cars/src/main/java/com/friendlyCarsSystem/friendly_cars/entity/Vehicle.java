@@ -16,7 +16,6 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -79,13 +78,21 @@ public class Vehicle {
     @Column(name = "vendedor", nullable = false, length = 40)
     private String sellerName;
 
+    // @JsonBackReference
+    // @ManyToOne(
+    //     cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+    //     fetch = FetchType.EAGER
+    // )
+    // @JoinColumn(name = "id_factura", nullable = false)
+    // private Invoice invoice;
+
     @JsonBackReference
     @ManyToOne(
-        cascade = {CascadeType.PERSIST, CascadeType.MERGE},
-        fetch = FetchType.EAGER
+        cascade = {CascadeType.MERGE, CascadeType.PERSIST},
+        fetch = FetchType.EAGER,
+        optional = true
     )
-    @JoinColumn(name = "id_factura", nullable = false)
-    private Invoice invoice;
+    private ShoppingCart shoppingCart;
 
     @OneToOne(
         orphanRemoval = true,

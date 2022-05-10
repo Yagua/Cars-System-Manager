@@ -45,14 +45,22 @@ public class ShoppingCart {
     )
     private Client client;
 
-    @JsonBackReference
+    // @JsonBackReference
+    // @OneToMany(
+    //     fetch = FetchType.LAZY,
+    //     cascade = CascadeType.ALL,
+    //     orphanRemoval = true,
+    //     mappedBy = "shoppingCart"
+    // )
+    // private List<Invoice> invoices = new ArrayList<>();
+
     @OneToMany(
-        fetch = FetchType.LAZY,
-        cascade = CascadeType.ALL,
-        orphanRemoval = true,
-        mappedBy = "shoppingCart"
+        fetch = FetchType.EAGER,
+        cascade = {CascadeType.MERGE, CascadeType.PERSIST},
+        mappedBy = "shoppingCart",
+        orphanRemoval = false
     )
-    private List<Invoice> invoices = new ArrayList<>();
+    private List<Vehicle> vehicles = new ArrayList<>();
 
     @Column(
         name = "fecha_creacion",

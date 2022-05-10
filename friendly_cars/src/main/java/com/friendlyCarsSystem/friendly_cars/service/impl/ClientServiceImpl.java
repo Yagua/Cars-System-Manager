@@ -49,11 +49,9 @@ public class ClientServiceImpl implements ClientService {
         if(cart == null) client.setShoppingCart(new ShoppingCart());
 
         cart.setClient(client);
-        List<Invoice> invoices = cart.getInvoices();
+        List<Invoice> invoices = client.getInvoices();
         invoices.forEach(invoice -> {
-            invoice.setShoppingCart(cart);
-            invoice.getVehicles().forEach(vehicle ->
-                    vehicle.setInvoice(invoice));
+            invoice.setClient(client);
         });
 
         return clientRepository.save(client);

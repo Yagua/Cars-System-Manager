@@ -29,7 +29,7 @@ class InvoiceService {
     }
 
     deleteInvoice(invoiceId) {
-        return axios.delete(INVOICE_BASE_URL + `/${invoiceId}`, invoiceId)
+        return axios.delete(INVOICE_BASE_URL + `/${invoiceId}`)
             .then(response => response.data)
     }
 }

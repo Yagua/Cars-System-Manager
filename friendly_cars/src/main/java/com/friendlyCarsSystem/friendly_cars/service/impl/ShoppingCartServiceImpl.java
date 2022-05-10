@@ -6,10 +6,13 @@ import java.util.Map;
 
 import com.friendlyCarsSystem.friendly_cars.entity.Client;
 import com.friendlyCarsSystem.friendly_cars.entity.ShoppingCart;
+import com.friendlyCarsSystem.friendly_cars.entity.Vehicle;
 import com.friendlyCarsSystem.friendly_cars.exception.ClientNotFoundException;
 import com.friendlyCarsSystem.friendly_cars.exception.ShoppingCartNotFoundException;
+import com.friendlyCarsSystem.friendly_cars.exception.VehicleNotFoundException;
 import com.friendlyCarsSystem.friendly_cars.repository.ClientRepository;
 import com.friendlyCarsSystem.friendly_cars.repository.ShoppingCartRepository;
+import com.friendlyCarsSystem.friendly_cars.repository.VehicleRepository;
 import com.friendlyCarsSystem.friendly_cars.service.ShoppingCartService;
 
 import org.springframework.http.ResponseEntity;
@@ -24,11 +27,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private ShoppingCartRepository shoppingCartRepository;
     private ClientRepository clientRepository;
+    private VehicleRepository vehicleRepository;
 
     public ShoppingCartServiceImpl(ShoppingCartRepository shoppingCartRepository,
-            ClientRepository clientRepository) {
+            ClientRepository clientRepository, VehicleRepository vehicleRepository) {
         this.shoppingCartRepository = shoppingCartRepository;
         this.clientRepository = clientRepository;
+        this.vehicleRepository = vehicleRepository;
     }
 
     @Override
@@ -77,7 +82,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                             shoppingCartId)));
         // cart.setCartId(updatedShoppingCart.getCartId());
         cart.setClient(updatedShoppingCart.getClient());
-        cart.setInvoices(updatedShoppingCart.getInvoices());
+        cart.setVehicles(updatedShoppingCart.getVehicles());
         return shoppingCartRepository.save(cart);
     }
 
@@ -108,5 +113,21 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         shoppingCartRepository.delete(cart);
         return ResponseEntity.ok(String.format("ShoppingCart '%d' deleted",
                     shoppingCartId));
+    }
+
+    @Override
+    public ShoppingCart dropVehicleOfShoppingCart(long shoppingCartId,
+            long vehicleId) throws Exception {
+        ShoppingCart cart = shoppingCartRepository.findById(shoppingCartId)
+            .orElseThrow(() -> new ShoppingCartNotFoundException(
+                        String.format("Shopping Cart identified with '%d' not found",
+                            shoppingCartId)));
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
+            .orElseThrow(() -> new VehicleNotFoundException(
+                        String.format("Vehicle Identified with '%s' not found",
+                            vehicleId)));
+        vehicle.setShoppingCart(null);
+        cart.getVehicles().remove(vehicle);
+        return shoppingCartRepository.save(cart);
     }
 }

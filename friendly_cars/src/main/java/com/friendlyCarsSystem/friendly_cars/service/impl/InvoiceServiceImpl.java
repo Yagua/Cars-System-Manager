@@ -27,12 +27,12 @@ import org.springframework.util.ReflectionUtils;
 public class InvoiceServiceImpl implements InvoiceService {
 
     private InvoiceRepository invoiceRepository;
-    private ShoppingCartRepository shoppingCartRepository;
+    private ClientRepository clientRepository;
 
     public InvoiceServiceImpl(InvoiceRepository invoiceRepository,
-            ShoppingCartRepository shoppingCartRepository) {
+            ClientRepository clientRepository) {
         this.invoiceRepository = invoiceRepository;
-        this.shoppingCartRepository = shoppingCartRepository;
+        this.clientRepository = clientRepository;
     }
 
     @Override
@@ -41,13 +41,13 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public List<Invoice> getAllInvoicesByShoppingCartId(long shoppingCartId)
+    public List<Invoice> getAllInvoicesByClientId(String clientId)
         throws ClientNotFoundException {
-        ShoppingCart cart = shoppingCartRepository.findById(shoppingCartId)
-            .orElseThrow(() -> new ShoppingCartNotFoundException(
-                        String.format("Shopping Cart identified with '%d' not found",
-                            shoppingCartId)));
-        return cart.getInvoices();
+        Client client = clientRepository.findById(clientId)
+            .orElseThrow(() -> new ClientNotFoundException(
+                        String.format("Client identified with '%s' not found",
+                            clientId)));
+        return client.getInvoices();
     }
 
     @Override
@@ -61,20 +61,14 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Invoice createInvoice(Invoice invoice, long shoppingCartId)
+    public Invoice createInvoice(Invoice invoice, String clientId)
         throws ClientNotFoundException {
-        ShoppingCart cart = shoppingCartRepository.findById(shoppingCartId)
-            .orElseThrow(() -> new ShoppingCartNotFoundException(
-                        String.format("Shopping Cart identified with '%d' not found",
-                            shoppingCartId)));
+        Client client = clientRepository.findById(clientId)
+            .orElseThrow(() -> new ClientNotFoundException(
+                        String.format("Client identified with '%s' not found",
+                            clientId)));
 
-        invoice.setShoppingCart(cart);
-        List<Vehicle> vehicles = invoice.getVehicles();
-        vehicles.forEach(vehicle -> vehicle.setInvoice(invoice));
-
-        List<Invoice> invoices = cart.getInvoices();
-        invoices.add(invoice);
-
+        invoice.setClient(client);
         return invoiceRepository.save(invoice);
     }
 
@@ -92,10 +86,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setDateOfSale(updatedInvoice.getDateOfSale());
         invoice.setTotalPrice(updatedInvoice.getTotalPrice());
         invoice.setAditionalPrices(updatedInvoice.getAditionalPrices());
-
-        List<Vehicle> vehicles = updatedInvoice.getVehicles();
-        vehicles.forEach(vehicle -> vehicle.setInvoice(invoice));
-
         invoice.setVehicles(updatedInvoice.getVehicles());
 
         return invoiceRepository.save(invoice);

@@ -8,6 +8,7 @@ import com.friendlyCarsSystem.friendly_cars.exception.ShoppingCartNotFoundExcept
 import com.friendlyCarsSystem.friendly_cars.service.ShoppingCartService;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/v1/carts")
+@CrossOrigin
 public class ShoppingCartController {
     private ShoppingCartService shoppingCartService;
 
@@ -49,6 +51,12 @@ public class ShoppingCartController {
     public ShoppingCart createShoppingCart(@PathVariable String clientId,
             @RequestBody ShoppingCart shoppingCart) {
         return shoppingCartService.createShoppingCart(clientId, shoppingCart);
+    }
+
+    @PostMapping("/{shoppingCartId}/vh/{vehicleId}")
+    public ShoppingCart dropVehicleToShoppingCart(@PathVariable long shoppingCartId,
+            @PathVariable long vehicleId) throws Exception {
+        return shoppingCartService.dropVehicleOfShoppingCart(shoppingCartId, vehicleId);
     }
 
     @DeleteMapping("/{shoppingCartId}")

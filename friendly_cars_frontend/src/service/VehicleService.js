@@ -29,7 +29,12 @@ class VehicleService {
     }
 
     deleteVehicle(vehicleId) {
-        return axios.delete(VEHICLE_BASE_URL + `/${vehicleId}`, vehicleId)
+        return axios.delete(VEHICLE_BASE_URL + `/${vehicleId}`)
+            .then(response => response.data)
+    }
+
+    addVehicleToShoppingCart(vehicleId, shoppingCartId) {
+        return axios.post(VEHICLE_BASE_URL + `/${vehicleId}/sc/${shoppingCartId}`, {})
             .then(response => response.data)
     }
 }

@@ -7,7 +7,6 @@ import com.friendlyCarsSystem.friendly_cars.entity.Vehicle;
 import com.friendlyCarsSystem.friendly_cars.exception.VehicleNotFoundException;
 import com.friendlyCarsSystem.friendly_cars.service.VehicleService;
 
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,9 +37,9 @@ public class VehicleController {
         return vehicleService.getAllVehicles();
     }
 
-    @GetMapping("/iv/{invoiceId}")
-    public List<Vehicle> getAllVehiclesByInvoiceId(@PathVariable long invoiceId) {
-        return vehicleService.getAllVehiclesByInvoiceId(invoiceId);
+    @GetMapping("/sc/{shoppingCartId}")
+    public List<Vehicle> getAllVehiclesByInvoiceId(@PathVariable long shoppingCartId) {
+        return vehicleService.getAllVehiclesByShoppingCartId(shoppingCartId);
     }
 
     @GetMapping("/{vehicleId}")
@@ -49,10 +48,9 @@ public class VehicleController {
         return vehicleService.getVehicleById(vehicleId);
     }
 
-    @PostMapping("/iv/{invoiceId}")
-    public Vehicle createVehicle(@PathVariable long invoiceId,
-            @RequestBody Vehicle vehicle) {
-        return vehicleService.createVehicle(vehicle, invoiceId);
+    @PostMapping
+    public Vehicle createVehicle(@RequestBody Vehicle vehicle) {
+        return vehicleService.createVehicle(vehicle);
     }
 
     @PutMapping("/{vehicleId}")
@@ -70,6 +68,12 @@ public class VehicleController {
     @DeleteMapping("/{vehicleId}")
     public ResponseEntity<String> deleteVehicle(@PathVariable long vehicleId)
         throws VehicleNotFoundException {
-        return vehicleService.deletVehicle(vehicleId);
+        return vehicleService.deleteVehicle(vehicleId);
+    }
+
+    @PostMapping("/{vehicleId}/sc/{shoppingCartId}")
+    public Vehicle addVehicleToShoppingCartId(@PathVariable long vehicleId,
+            @PathVariable long shoppingCartId) throws Exception {
+        return vehicleService.addVehicleToShoppingCart(shoppingCartId, vehicleId);
     }
 }

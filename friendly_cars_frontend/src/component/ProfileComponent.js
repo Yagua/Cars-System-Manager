@@ -48,6 +48,7 @@ const ProfileComponent = () => {
                                  <h5><strong>Nombres: </strong>{client.firstName} {client.secondName}</h5>
                                  <h5><strong>Apellidos: </strong>{client.paternalLastName} {client.maternalLastName}</h5>
                                  <h5><strong>Nombre de usuario: </strong>{client.userName}</h5>
+                                 <h5><strong>Numero de Celular: </strong>{client.telephoneNumber}</h5>
                              </div>
                              <br/>
                              <Link

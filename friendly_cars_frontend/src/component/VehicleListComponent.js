@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import Accordion from 'react-bootstrap/Accordion'
 
 import VehicleService from '../service/VehicleService'
+import ShoppingCartService from '../service/ShoppingCartService'
 import FooterComponent from '../component/FooterComponent'
 import LoadingComponent from './LoadingComponent'
 import defCarImg from '../img/defCarImg.png'
@@ -10,6 +11,7 @@ import defCarImg from '../img/defCarImg.png'
 const VehicleListComponent = (props) => {
     let [isLoaded, setIsLoaded] = useState(false);
     let [vehicles, setVehicles] = useState([]);
+    let shoppingCartId = localStorage.getItem("shoppingCartId")
     let navigate = useNavigate()
 
     useEffect(() => {
@@ -20,14 +22,35 @@ const VehicleListComponent = (props) => {
                 setIsLoaded(true);
             })
             .catch(error => console.error(error))
+        console.log("foo bar")
     }, [])
+
+    const addVehicleToShoopingCart = (vehicleId) => {
+        VehicleService.addVehicleToShoppingCart(vehicleId,
+            shoppingCartId)
+            .then(response => console.log(response))
+            .catch(error => console.error(error))
+        VehicleService.partialUpdateVehicle(vehicleId, { available: false })
+            .then(_ => {})
+            .catch(error => console.error(error))
+    }
+
+    const dropVehicloOfShoppingCart = (vehicleId) => {
+        ShoppingCartService.dropVehicleOfShoppingCart(shoppingCartId, vehicleId)
+            .then(_ => {})
+            .catch(error => console.error(error))
+        VehicleService.partialUpdateVehicle(vehicleId, { available: true })
+            .then(_ => {})
+            .catch(error => console.error(error))
+    }
 
     const renderContent = () => {
         if(!isLoaded) return <LoadingComponent />
+        let elements = props.vehicles ? props.vehicles : vehicles
         return (
             <>
                 <div className="m-2 row d-flex justify-content-center" style={{backgroundColor: "#EDE7EF"}}>
-                    {vehicles.map((vehicle) => {
+                    {elements.map((vehicle) => {
                         let imgSrc = vehicle.image
                             ? `data:${vehicle.image.imageType};base64,${vehicle.image.imageContent}`
                             : defCarImg
@@ -74,16 +97,31 @@ const VehicleListComponent = (props) => {
                                        <Accordion.Item></Accordion.Item>
                                      </Accordion>
                                      <div className = "d-flex justify-content-center">
-                                         <button 
+                                        {props.onHome ?
+                                         <button
                                             className={`btn ${vehicle.available ? "btn-primary" : "btn-secondary"} mt-3`}
                                             onClick = {() => {
                                                 if(vehicle.available) {
-                                                    console.log("available")
-                                                } else {
-                                                    console.log("not available")
+                                                    addVehicleToShoopingCart(vehicle.vehicleId)
                                                 }
                                             }}
                                          >Agregar a Carrito</button>
+                                            :
+                                        <>
+                                         <button
+                                            className="btn btn-success mt-3"
+                                            onClick = {() => {
+                                                //some logic to delete this vehicle to the shoppingCart
+                                            }}
+                                         >Comprar</button>
+                                         <button
+                                            className="btn btn-danger mx-3 mt-3"
+                                            onClick = {() => {
+                                                dropVehicloOfShoppingCart(vehicle.vehicleId)
+                                            }}
+                                         >Eliminar</button>
+                                        </>
+                                        }
                                      </div>
                                  </div>
                             </div>
@@ -91,7 +129,16 @@ const VehicleListComponent = (props) => {
                     })
                     }
                 </div>
-                <FooterComponent />
+                {!props.onHome &&
+                <div
+                    className="validateCart"
+                    style={{bottom: "0", position: "fixed"}}
+                >
+                    <button type="button" className = "btn btn-success m-3">
+                        Validar Carrito
+                    </button>
+                </div>
+                }
             </>
         );
     }

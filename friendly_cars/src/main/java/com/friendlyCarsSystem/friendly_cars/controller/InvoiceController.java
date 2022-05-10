@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.friendlyCarsSystem.friendly_cars.entity.Invoice;
+import com.friendlyCarsSystem.friendly_cars.exception.ClientNotFoundException;
 import com.friendlyCarsSystem.friendly_cars.exception.InvoiceNotFoundException;
-import com.friendlyCarsSystem.friendly_cars.exception.ShoppingCartNotFoundException;
 import com.friendlyCarsSystem.friendly_cars.service.InvoiceService;
 
 import org.springframework.http.ResponseEntity;
@@ -45,16 +45,16 @@ public class InvoiceController {
         return invoiceService.getInvoiceById(invoiceId);
     }
 
-    @GetMapping("/sc/{shoppingCartId}")
-    public List<Invoice> getAllInvoicesByShoppingCartId(@PathVariable long shoppingCartId)
-        throws ShoppingCartNotFoundException {
-        return invoiceService.getAllInvoicesByShoppingCartId(shoppingCartId);
+    @GetMapping("/c/{clientId}")
+    public List<Invoice> getAllInvoicesByClientId(@PathVariable String clientId)
+        throws ClientNotFoundException {
+        return invoiceService.getAllInvoicesByClientId(clientId);
     }
 
-    @PostMapping("/sc/{shoppingCartId}")
+    @PostMapping("/c/{clientId}")
     public Invoice createInovice(@RequestBody Invoice invoice,
-            @PathVariable long shoppingCartId) {
-        return invoiceService.createInvoice(invoice, shoppingCartId);
+            @PathVariable String clientId) {
+        return invoiceService.createInvoice(invoice, clientId);
     }
 
     @PutMapping("/{invoiceId}")
