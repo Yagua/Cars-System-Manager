@@ -22,25 +22,28 @@ const VehicleListComponent = (props) => {
                 setIsLoaded(true);
             })
             .catch(error => console.error(error))
-        console.log("foo bar")
     }, [])
 
     const addVehicleToShoopingCart = (vehicleId) => {
         VehicleService.addVehicleToShoppingCart(vehicleId,
             shoppingCartId)
-            .then(response => console.log(response))
-            .catch(error => console.error(error))
-        VehicleService.partialUpdateVehicle(vehicleId, { available: false })
-            .then(_ => {})
+            .then(_ => {
+                VehicleService.partialUpdateVehicle(
+                    vehicleId, { available: false })
+                    .then(() => window.location.reload())
+                    .catch(error => console.error(error))
+            })
             .catch(error => console.error(error))
     }
 
     const dropVehicloOfShoppingCart = (vehicleId) => {
         ShoppingCartService.dropVehicleOfShoppingCart(shoppingCartId, vehicleId)
-            .then(_ => {})
-            .catch(error => console.error(error))
-        VehicleService.partialUpdateVehicle(vehicleId, { available: true })
-            .then(_ => {})
+            .then(_ => {
+                VehicleService.partialUpdateVehicle(
+                    vehicleId, { available: true })
+                    .then(window.location.reload())
+                    .catch(error => console.error(error))
+            })
             .catch(error => console.error(error))
     }
 
@@ -100,9 +103,9 @@ const VehicleListComponent = (props) => {
                                         {props.onHome ?
                                          <button
                                             className={`btn ${vehicle.available ? "btn-primary" : "btn-secondary"} mt-3`}
-                                            onClick = {() => {
+                                            onClick = {(e) => {
                                                 if(vehicle.available) {
-                                                    addVehicleToShoopingCart(vehicle.vehicleId)
+                                                    addVehicleToShoopingCart(vehicle.vehicleId, e)
                                                 }
                                             }}
                                          >Agregar a Carrito</button>
