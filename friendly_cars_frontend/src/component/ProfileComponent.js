@@ -51,10 +51,12 @@ const ProfileComponent = () => {
                                  <h5><strong>Numero de Celular: </strong>{client.telephoneNumber}</h5>
                              </div>
                              <br/>
+                            {/*
                              <Link
                                  className="btn btn-success mx-auto d-block"
                                  to = "/updateinfo"
                              > Actualizar Datos</Link>
+                            */}
                              <buttom
                                  className="btn btn-secondary mx-auto d-block my-2"
                                  onClick = {() => {}}

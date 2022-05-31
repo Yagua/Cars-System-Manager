@@ -6,6 +6,7 @@ import LoginComponent from './component/LoginComponent'
 import HomeComponent from './component/HomeComponent'
 import ProfileComponent from './component/ProfileComponent'
 import ShoppingCartComponent from './component/ShoppingCartComponent'
+import RegisterComponent from './component/RegisterComponent'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route exact path="/login" element={<LoginComponent />} />
             <Route exact path="/profile" element={<ProfileComponent />} />
             <Route exact path="/cart" element={<ShoppingCartComponent/>} />
+            <Route exact path="/user-register" element={<RegisterComponent/>} />
         </Routes>
       </Router>
   );
