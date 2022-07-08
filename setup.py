@@ -1,10 +1,14 @@
-import urllib3
 import json
+from urllib3 import PoolManager
+from pathlib import Path
+
+root_image_dir = Path(__file__).resolve().parent / \
+        "cs_manager_system/src/main/resources/static/vehicles"
 
 url = "http://localhost:8080/api/v1/vehicles/"
 url_img = "http://localhost:8080/api/v1/images/vh/%d"
 url_client = "http://localhost:8080/api/v1/clients/"
-http = urllib3.PoolManager()
+http = PoolManager()
 
 if not url.startswith("http") and not url_img.startswith("http"):
     raise RuntimeError("Incorrect and possibly insecure protocol in url")
@@ -56,7 +60,7 @@ data = [
         "image": {
             "imageName": "1.jpg",
             "imageType": "image/jpg",
-            "imageContent": "./friendly_cars/src/main/resources/static/vehicles/1.jpg"
+            "imageContent": root_image_dir / "1.jpg"
         }
     },
     {
@@ -72,7 +76,7 @@ data = [
         "image": {
             "imageName": "2.jpg",
             "imageType": "image/jpg",
-            "imageContent": "./friendly_cars/src/main/resources/static/vehicles/2.jpg"
+            "imageContent": root_image_dir / "2.jpg"
         }
     },
     {
@@ -88,7 +92,7 @@ data = [
         "image": {
             "imageName": "3.jpg",
             "imageType": "image/jpg",
-            "imageContent": "./friendly_cars/src/main/resources/static/vehicles/3.jpg"
+            "imageContent": root_image_dir / "3.jpg"
         }
     },
     {
@@ -104,7 +108,7 @@ data = [
         "image": {
             "imageName": "4.jpg",
             "imageType": "image/jpg",
-            "imageContent": "./friendly_cars/src/main/resources/static/vehicles/4.jpg"
+            "imageContent": root_image_dir / "4.jpg"
         }
     },
     {
@@ -120,7 +124,7 @@ data = [
         "image": {
             "imageName": "5.jpg",
             "imageType": "image/jpg",
-            "imageContent": "./friendly_cars/src/main/resources/static/vehicles/5.jpg"
+            "imageContent": root_image_dir / "5.jpg"
         }
     },
     {
@@ -136,7 +140,7 @@ data = [
         "image": {
             "imageName": "6.jpg",
             "imageType": "image/jpg",
-            "imageContent": "./friendly_cars/src/main/resources/static/vehicles/6.jpg"
+            "imageContent": root_image_dir / "6.jpg"
         }
     },
     {
@@ -152,7 +156,7 @@ data = [
         "image": {
             "imageName": "7.jpg",
             "imageType": "image/jpg",
-            "imageContent": "./friendly_cars/src/main/resources/static/vehicles/7.jpg"
+            "imageContent": root_image_dir / "7.jpg"
         }
     },
     {
@@ -168,7 +172,7 @@ data = [
         "image": {
             "imageName": "8.jpg",
             "imageType": "image/jpg",
-            "imageContent": "./friendly_cars/src/main/resources/static/vehicles/8.jpg"
+            "imageContent": root_image_dir / "8.jpg"
         }
     },
     {
@@ -184,7 +188,7 @@ data = [
         "image": {
             "imageName": "9.jpg",
             "imageType": "image/jpg",
-            "imageContent": "./friendly_cars/src/main/resources/static/vehicles/9.jpg"
+            "imageContent": root_image_dir / "9.jpg"
         }
     },
     {
@@ -200,7 +204,7 @@ data = [
         "image": {
             "imageName": "10.jpg",
             "imageType": "image/jpg",
-            "imageContent": "./friendly_cars/src/main/resources/static/vehicles/10.jpg"
+            "imageContent": root_image_dir / "10.jpg"
         }
     },
     {
@@ -216,7 +220,7 @@ data = [
         "image": {
             "imageName": "11.jpg",
             "imageType": "image/jpg",
-            "imageContent": "./friendly_cars/src/main/resources/static/vehicles/11.jpg"
+            "imageContent": root_image_dir / "11.jpg"
         }
     },
     {
@@ -232,7 +236,7 @@ data = [
         "image": {
             "imageName": "12.jpg",
             "imageType": "image/jpg",
-            "imageContent": "./friendly_cars/src/main/resources/static/vehicles/12.jpg"
+            "imageContent": root_image_dir / "12.jpg"
         }
     },
 ]
