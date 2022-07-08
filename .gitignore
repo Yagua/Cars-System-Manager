@@ -1,9 +1,9 @@
-friendly_cars/bin/
-friendly_cars/build/
-friendly_cars/.classpath
-friendly_cars/.gradle/
-friendly_cars/.project
-friendly_cars/.settings/
-friendly_cars/HELP.md
+cs_manager_system/bin/
+cs_manager_system/build/
+cs_manager_system/.classpath
+cs_manager_system/.gradle/
+cs_manager_system/.project
+cs_manager_system/.settings/
+cs_manager_system/HELP.md
 
-friendly_cars_frontend/node_modules/
+cs_manager_frontend/node_modules/
