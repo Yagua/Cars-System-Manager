@@ -32,34 +32,34 @@ public class ClientController {
     }
 
     @GetMapping
-    public List<Client> getAllClients() {
+    public ResponseEntity<List<Client>> getAllClients() {
         return clientService.getAllClients();
     }
 
     @GetMapping("/{clientId}")
-    private Client getClientById(@PathVariable String clientId) {
+    public ResponseEntity<Client> getClientById(@PathVariable String clientId) {
         return clientService.getClientById(clientId);
     }
 
     @PostMapping
-    public Client createClient(@RequestBody Client client) {
+    public ResponseEntity<Client> createClient(@RequestBody Client client) {
         return clientService.createClient(client);
     }
 
     @PutMapping("/{clientId}")
-    public Client updateClient(@PathVariable String clientId,
+    public ResponseEntity<Client> updateClient(@PathVariable String clientId,
             @RequestBody Client client) {
         return clientService.updateClient(clientId, client);
     }
 
     @PatchMapping("/{clientId}")
-    public Client partialUpdateClient(@PathVariable String clientId,
+    public ResponseEntity<Client> partialUpdateClient(@PathVariable String clientId,
             @RequestBody Map<Object, Object> fields) {
         return clientService.partialUpdateClient(clientId, fields);
     }
 
     @DeleteMapping("/{clientId}")
-    public ResponseEntity<String> deleteClient(@PathVariable String clientId) {
+    public ResponseEntity<?> deleteClient(@PathVariable String clientId) {
         return clientService.deletClient(clientId);
     }
 }

@@ -31,36 +31,36 @@ public class ShoppingCartController {
     }
 
     @GetMapping
-    public List<ShoppingCart> getAllShoppingCarts() {
+    public ResponseEntity<List<ShoppingCart>> getAllShoppingCarts() {
         return shoppingCartService.getAllShoppingCarts();
     }
 
     @GetMapping("/{shoppingCartId}")
-    public ShoppingCart getShoppingCartById(@PathVariable long shoppingCartId)
+    public ResponseEntity<ShoppingCart> getShoppingCartById(@PathVariable long shoppingCartId)
         throws ShoppingCartNotFoundException {
         return shoppingCartService.getShoppingCartById(shoppingCartId);
     }
 
     @GetMapping("/c/{clientId}")
-    public ShoppingCart getShoppingCartByClientId(@PathVariable String clientId)
+    public ResponseEntity<ShoppingCart> getShoppingCartByClientId(@PathVariable String clientId)
         throws ClientNotFoundException {
         return shoppingCartService.getShoppingCartClientId(clientId);
     }
 
     @PostMapping("/c/{clientId}")
-    public ShoppingCart createShoppingCart(@PathVariable String clientId,
+    public ResponseEntity<ShoppingCart> createShoppingCart(@PathVariable String clientId,
             @RequestBody ShoppingCart shoppingCart) {
         return shoppingCartService.createShoppingCart(clientId, shoppingCart);
     }
 
     @PostMapping("/{shoppingCartId}/vh/{vehicleId}")
-    public ShoppingCart dropVehicleToShoppingCart(@PathVariable long shoppingCartId,
+    public ResponseEntity<ShoppingCart> dropVehicleToShoppingCart(@PathVariable long shoppingCartId,
             @PathVariable long vehicleId) throws Exception {
         return shoppingCartService.dropVehicleOfShoppingCart(shoppingCartId, vehicleId);
     }
 
     @DeleteMapping("/{shoppingCartId}")
-    public ResponseEntity<String> deleteShoppingCart(@PathVariable long shoppingCartId)
+    public ResponseEntity<?> deleteShoppingCart(@PathVariable long shoppingCartId)
         throws ShoppingCartNotFoundException {
         return shoppingCartService.deleteShoppingCart(shoppingCartId);
     }

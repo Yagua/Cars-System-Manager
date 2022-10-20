@@ -32,32 +32,34 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public List<Invoice> getAllInvoices() {
-        return invoiceRepository.findAll();
+    public ResponseEntity<List<Invoice>> getAllInvoices() {
+        List<Invoice> invoices = invoiceRepository.findAll();
+        return ResponseEntity.ok(invoices);
     }
 
     @Override
-    public List<Invoice> getAllInvoicesByClientId(String clientId)
+    public ResponseEntity<List<Invoice>> getAllInvoicesByClientId(String clientId)
         throws ClientNotFoundException {
         Client client = clientRepository.findById(clientId)
             .orElseThrow(() -> new ClientNotFoundException(
                         String.format("Client identified with '%s' not found",
                             clientId)));
-        return client.getInvoices();
+        List<Invoice> clientInvoices = client.getInvoices();
+        return ResponseEntity.ok(clientInvoices);
     }
 
     @Override
-    public Invoice getInvoiceById(long invoiceId)
+    public ResponseEntity<Invoice> getInvoiceById(long invoiceId)
         throws InvoiceNotFoundException {
         Invoice invoice = invoiceRepository.findById(invoiceId)
             .orElseThrow(() -> new InvoiceNotFoundException(
                         String.format("Invoice identified with '%s' not found",
                             invoiceId)));
-        return invoice;
+        return ResponseEntity.ok(invoice);
     }
 
     @Override
-    public Invoice createInvoice(Invoice invoice, String clientId)
+    public ResponseEntity<Invoice> createInvoice(Invoice invoice, String clientId)
         throws ClientNotFoundException {
         Client client = clientRepository.findById(clientId)
             .orElseThrow(() -> new ClientNotFoundException(
@@ -65,11 +67,14 @@ public class InvoiceServiceImpl implements InvoiceService {
                             clientId)));
 
         invoice.setClient(client);
-        return invoiceRepository.save(invoice);
+
+        Invoice savedInvoice = invoiceRepository.save(invoice);
+
+        return ResponseEntity.ok(savedInvoice);
     }
 
     @Override
-    public Invoice updateInvoice(long invoiceId, Invoice updatedInvoice)
+    public ResponseEntity<Invoice> updateInvoice(long invoiceId, Invoice updatedInvoice)
         throws InvoiceNotFoundException {
         Invoice invoice = invoiceRepository.findById(invoiceId)
             .orElseThrow(() -> new InvoiceNotFoundException(
@@ -84,11 +89,13 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setAditionalPrices(updatedInvoice.getAditionalPrices());
         invoice.setVehicles(updatedInvoice.getVehicles());
 
-        return invoiceRepository.save(invoice);
+        Invoice savedInvoice = invoiceRepository.save(invoice);
+
+        return ResponseEntity.ok(savedInvoice);
     }
 
     @Override
-    public Invoice partialUpdateInvoice(long invoiceId, Map<Object, Object> fields)
+    public ResponseEntity<Invoice> partialUpdateInvoice(long invoiceId, Map<Object, Object> fields)
         throws InvoiceNotFoundException {
         Invoice invoice = invoiceRepository.findById(invoiceId)
             .orElseThrow(() -> new InvoiceNotFoundException(
@@ -101,18 +108,20 @@ public class InvoiceServiceImpl implements InvoiceService {
             ReflectionUtils.setField(field, invoice, value);
         });
 
-        return invoiceRepository.save(invoice);
+        Invoice savedInvoice = invoiceRepository.save(invoice);
+
+        return ResponseEntity.ok(savedInvoice);
     }
 
     @Override
-    public ResponseEntity<String> deletInvoice(long invoiceId)
+    public ResponseEntity<?> deletInvoice(long invoiceId)
         throws InvoiceNotFoundException {
         Invoice invoice = invoiceRepository.findById(invoiceId)
             .orElseThrow(() -> new InvoiceNotFoundException(
                         String.format("Invoice identified with '%s' not found",
                             invoiceId)));
         invoiceRepository.delete(invoice);
-        return ResponseEntity.ok(String.format("Invoice '%d' deleted", invoiceId));
+        return ResponseEntity.noContent().build();
     }
 
 }

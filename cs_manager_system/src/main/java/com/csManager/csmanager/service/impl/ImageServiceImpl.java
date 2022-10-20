@@ -30,39 +30,42 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Image getImageById(long imageId) throws ImageNotFoundException {
+    public ResponseEntity<Image> getImageById(long imageId) throws ImageNotFoundException {
         Image image = imageRepository.findById(imageId)
             .orElseThrow(() -> new ImageNotFoundException(
                         String.format("Image identified with '%d' not found",
                             imageId)));
-        return image;
+        return ResponseEntity.ok(image);
     }
 
     @Override
-    public Image getImageByName(String imageName) throws ImageNotFoundException {
+    public ResponseEntity<Image> getImageByName(String imageName) throws ImageNotFoundException {
         Image image = imageRepository.findByImageName(imageName)
             .orElseThrow(() -> new ImageNotFoundException(
                         String.format("Image'%d' not found",
                             imageName)));
-        return image;
+
+        return ResponseEntity.ok(image);
     }
 
     @Override
-    public Image getImageByVehicleId(long vehicleId) throws VehicleNotFoundException {
+    public ResponseEntity<Image> getImageByVehicleId(long vehicleId) throws VehicleNotFoundException {
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
             .orElseThrow(() -> new ImageNotFoundException(
                         String.format("Vehicle identified with '%d' not found",
                             vehicleId)));
-        return vehicle.getImage();
+        Image vehicleImage = vehicle.getImage();
+        return ResponseEntity.ok(vehicleImage);
     }
 
     @Override
-    public List<Image> getAllImages() {
-        return imageRepository.findAll();
+    public ResponseEntity<List<Image>> getAllImages() {
+        List<Image> images = imageRepository.findAll();
+        return ResponseEntity.ok(images);
     }
 
     @Override
-    public Image saveImage(long vehicleId, MultipartFile file) throws Exception {
+    public ResponseEntity<Image> saveImage(long vehicleId, MultipartFile file) throws Exception {
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
             .orElseThrow(() -> new ImageNotFoundException(
                         String.format("Vehicle identified with '%d' not found",
@@ -75,11 +78,13 @@ public class ImageServiceImpl implements ImageService {
         Image image = prepareImage(file);
         vehicle.setImage(image);
         vehicleRepository.save(vehicle);
-        return vehicle.getImage();
+
+        Image vehicleImage = vehicle.getImage();
+        return ResponseEntity.ok(vehicleImage);
     }
 
     @Override
-    public Image updateImage(long imageId, MultipartFile file) throws Exception {
+    public ResponseEntity<Image> updateImage(long imageId, MultipartFile file) throws Exception {
         Image image = imageRepository.findById(imageId)
             .orElseThrow(() -> new ImageNotFoundException(
                         String.format("Image identified with '%d' not found",
@@ -92,11 +97,12 @@ public class ImageServiceImpl implements ImageService {
         image.setImageContent(newImage.getImageContent());
         image.setImageType(newImage.getImageType());
 
-        return imageRepository.save(image);
+        Image savedImage = imageRepository.save(image);
+        return ResponseEntity.ok(savedImage);
     }
 
     @Override
-    public Image updateImageByVehicleId(long vehicleId, MultipartFile file)
+    public ResponseEntity<Image> updateImageByVehicleId(long vehicleId, MultipartFile file)
         throws Exception {
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
             .orElseThrow(() -> new VehicleNotFoundException(
@@ -111,11 +117,13 @@ public class ImageServiceImpl implements ImageService {
         Image newVehicleImg = prepareImage(file);
         vehicle.setImage(newVehicleImg);
         vehicleRepository.save(vehicle);
-        return vehicle.getImage();
+        Image vehicleImage = vehicle.getImage();
+
+        return ResponseEntity.ok(vehicleImage);
     }
 
     @Override
-    public ResponseEntity<String> deleteImage(long imageId) throws Exception {
+    public ResponseEntity<?> deleteImage(long imageId) throws Exception {
         Image image = imageRepository.findById(imageId)
             .orElseThrow(() -> new ImageNotFoundException(
                         String.format("Image identified with '%d' not found",
@@ -125,8 +133,7 @@ public class ImageServiceImpl implements ImageService {
         vehicle.setImage(null);
 
         imageRepository.delete(image);
-        return ResponseEntity.ok(String.format("Image '%s' deleted",
-                    image.getImageId()));
+        return ResponseEntity.noContent().build();
     }
 
     public Image prepareImage(MultipartFile file) throws Exception {

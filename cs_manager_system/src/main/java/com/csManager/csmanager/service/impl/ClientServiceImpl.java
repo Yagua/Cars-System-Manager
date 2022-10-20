@@ -28,22 +28,23 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public List<Client> getAllClients() {
-        return clientRepository.findAll();
+    public ResponseEntity<List<Client>> getAllClients() {
+        List<Client> clients = clientRepository.findAll();
+        return ResponseEntity.ok(clients);
     }
 
     @Override
-    public Client getClientById(String clientId)
+    public ResponseEntity<Client> getClientById(String clientId)
         throws ClientNotFoundException {
         Client client = clientRepository.findById(clientId)
             .orElseThrow(() -> new ClientNotFoundException(
                         String.format("Client identified with '%s' not found",
                             clientId)));
-        return client;
+        return ResponseEntity.ok(client);
     }
 
     @Override
-    public Client createClient(Client client) {
+    public ResponseEntity<Client> createClient(Client client) {
         ShoppingCart cart = client.getShoppingCart();
 
         if(cart == null) client.setShoppingCart(new ShoppingCart());
@@ -54,11 +55,13 @@ public class ClientServiceImpl implements ClientService {
             invoice.setClient(client);
         });
 
-        return clientRepository.save(client);
+        Client savedClient = clientRepository.save(client);
+
+        return ResponseEntity.ok(savedClient);
     }
 
     @Override
-    public Client updateClient(String clientId, Client updatedClient)
+    public ResponseEntity<Client> updateClient(String clientId, Client updatedClient)
         throws ClientNotFoundException {
         Client client = clientRepository.findById(clientId)
             .orElseThrow(() -> new ClientNotFoundException(
@@ -76,11 +79,13 @@ public class ClientServiceImpl implements ClientService {
         client.setMaternalLastName(updatedClient.getMaternalLastName());
         client.setTelephoneNumber(updatedClient.getTelephoneNumber());
 
-        return clientRepository.save(client);
+        Client savedClient = clientRepository.save(client);
+
+        return ResponseEntity.ok(savedClient);
     }
 
     @Override
-    public Client partialUpdateClient(String clientId, Map<Object, Object> fields)
+    public ResponseEntity<Client> partialUpdateClient(String clientId, Map<Object, Object> fields)
         throws ClientNotFoundException {
         Client client = clientRepository.findById(clientId)
             .orElseThrow(() -> new ClientNotFoundException(
@@ -93,32 +98,34 @@ public class ClientServiceImpl implements ClientService {
             ReflectionUtils.setField(field, client, value);
         });
 
-        return clientRepository.save(client);
+        Client savedClient = clientRepository.save(client);
+
+        return ResponseEntity.ok(savedClient);
     }
 
     @Override
-    public ResponseEntity<String> deletClient(String clientId)
+    public ResponseEntity<?> deletClient(String clientId)
         throws ClientNotFoundException {
         Client client = clientRepository.findById(clientId)
             .orElseThrow(() -> new ClientNotFoundException(
                         String.format("Client identified with '%s' not found",
                             clientId)));
         clientRepository.delete(client);
-        return ResponseEntity.ok(String.format("Client '%s' deleted", clientId));
+        return ResponseEntity.noContent().build();
     }
 
     @Override
-    public Client loginClient(String clientName, String clientPassword)
+    public ResponseEntity<Client> loginClient(String clientName, String clientPassword)
         throws ClientNotFoundException {
         Client client = clientRepository.findByUserNameAndPassword(clientName,
                 clientPassword).orElseThrow(() -> new ClientNotFoundException(
                         String.format("Client identified with user name '%s' not found",
                             clientName)));
-        return client;
+        return ResponseEntity.ok(client);
     }
 
     @Override
-    public Client changePassword(String clientName, String clientPassword)
+    public ResponseEntity<Client> changePassword(String clientName, String clientPassword)
         throws ClientNotFoundException {
         Client client = clientRepository.findByUserName(clientName)
             .orElseThrow(() -> new ClientNotFoundException(
@@ -126,6 +133,7 @@ public class ClientServiceImpl implements ClientService {
                             clientName)));
         client.setPassword(clientPassword);
 
-        return clientRepository.save(client);
+        Client savedClient = clientRepository.save(client);
+        return ResponseEntity.ok(savedClient);
     }
 }

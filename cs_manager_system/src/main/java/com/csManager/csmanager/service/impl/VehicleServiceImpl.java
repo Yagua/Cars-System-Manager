@@ -33,39 +33,42 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public List<Vehicle> getAllVehicles() {
-        return vehicleRepository.findAll();
+    public ResponseEntity<List<Vehicle>> getAllVehicles() {
+        List<Vehicle> vehicles = vehicleRepository.findAll();
+        return ResponseEntity.ok(vehicles);
     }
 
     @Override
-    public Vehicle getVehicleById(long vehicleId)
+    public ResponseEntity<Vehicle> getVehicleById(long vehicleId)
         throws VehicleNotFoundException {
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
             .orElseThrow(() -> new VehicleNotFoundException(
                         String.format("Vehicle Identified with '%s' not found",
                             vehicleId)));
-        return vehicle;
+        return ResponseEntity.ok(vehicle);
     }
 
     @Override
-    public List<Vehicle> getAllVehiclesByShoppingCartId(long shoppingCartId)
+    public ResponseEntity<List<Vehicle>> getAllVehiclesByShoppingCartId(long shoppingCartId)
         throws ShoppingCartNotFoundException {
         ShoppingCart cart = shoppingCartRepository.findById(shoppingCartId)
             .orElseThrow(() -> new ShoppingCartNotFoundException(
                         String.format("Shopping Cart identified with '%d' not found",
                             shoppingCartId)));
-        return cart.getVehicles();
+        List<Vehicle> vehicles = cart.getVehicles();
+        return ResponseEntity.ok(vehicles);
     }
 
     @Override
-    public Vehicle createVehicle(Vehicle vehicle) {
+    public ResponseEntity<Vehicle> createVehicle(Vehicle vehicle) {
         Image image = vehicle.getImage();
         if(image != null) image.setVehicle(vehicle);
-        return vehicleRepository.save(vehicle);
+        Vehicle newVehicle = vehicleRepository.save(vehicle);
+        return ResponseEntity.ok(newVehicle);
     }
 
     @Override
-    public Vehicle updateVehicle(long vehicleId, Vehicle updatedVehicle)
+    public ResponseEntity<Vehicle> updateVehicle(long vehicleId, Vehicle updatedVehicle)
         throws VehicleNotFoundException {
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
             .orElseThrow(() -> new VehicleNotFoundException(
@@ -84,11 +87,13 @@ public class VehicleServiceImpl implements VehicleService {
         vehicle.setVehicleWeight(updatedVehicle.getVehicleWeight());
         vehicle.setPlaceOfManufacture(updatedVehicle.getPlaceOfManufacture());
 
-        return vehicleRepository.save(vehicle);
+        Vehicle savedVehicle = vehicleRepository.save(vehicle);
+
+        return ResponseEntity.ok(savedVehicle);
     }
 
     @Override
-    public Vehicle partialUpdateVehicle(long vehicleId, Map<Object, Object> fields)
+    public ResponseEntity<Vehicle> partialUpdateVehicle(long vehicleId, Map<Object, Object> fields)
         throws VehicleNotFoundException {
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
             .orElseThrow(() -> new VehicleNotFoundException(
@@ -101,22 +106,24 @@ public class VehicleServiceImpl implements VehicleService {
             ReflectionUtils.setField(field, vehicle, value);
         });
 
-        return vehicleRepository.save(vehicle);
+        Vehicle updatedVehicle = vehicleRepository.save(vehicle);
+
+        return ResponseEntity.ok(updatedVehicle);
     }
 
     @Override
-    public ResponseEntity<String> deleteVehicle(long vehicleId)
+    public ResponseEntity<?> deleteVehicle(long vehicleId)
         throws VehicleNotFoundException {
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
             .orElseThrow(() -> new VehicleNotFoundException(
                         String.format("Vehicle Identified with '%s' not found",
                             vehicleId)));
         vehicleRepository.delete(vehicle);
-        return ResponseEntity.ok(String.format("Vehicle '%d' deleted", vehicleId));
+        return ResponseEntity.noContent().build();
     }
 
     @Override
-    public Vehicle addVehicleToShoppingCart(long shoppingCartId,
+    public ResponseEntity<Vehicle> addVehicleToShoppingCart(long shoppingCartId,
             long vehicleId) throws Exception {
         ShoppingCart cart = shoppingCartRepository.findById(shoppingCartId)
             .orElseThrow(() -> new ShoppingCartNotFoundException(
@@ -128,6 +135,7 @@ public class VehicleServiceImpl implements VehicleService {
                             vehicleId)));
         vehicle.setShoppingCart(cart);
         cart.getVehicles().add(vehicle);
-        return vehicleRepository.save(vehicle);
+        Vehicle newVehicle =  vehicleRepository.save(vehicle);
+        return ResponseEntity.ok(newVehicle);
     }
 }

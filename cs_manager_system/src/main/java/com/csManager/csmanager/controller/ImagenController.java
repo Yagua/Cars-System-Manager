@@ -32,41 +32,41 @@ public class ImagenController {
     }
 
     @GetMapping
-    public List<Image> getAllImages() {
+    public ResponseEntity<List<Image>> getAllImages() {
         return imageService.getAllImages();
     }
 
     @GetMapping("/{imageId}")
-    public Image getImageById(@PathVariable long imageId)
+    public ResponseEntity<Image> getImageById(@PathVariable long imageId)
         throws ImageNotFoundException {
         return imageService.getImageById(imageId);
     }
 
     @GetMapping("/vh/{vehicleId}")
-    public Image getImageByVehicleId(@PathVariable long vehicleId) {
+    public ResponseEntity<Image> getImageByVehicleId(@PathVariable long vehicleId) {
         return imageService.getImageByVehicleId(vehicleId);
     }
 
     @PostMapping("/vh/{vehicleId}")
-    public Image saveImage(@PathVariable long vehicleId,
+    public ResponseEntity<Image> saveImage(@PathVariable long vehicleId,
             @RequestParam("file") MultipartFile file) throws Exception {
         return imageService.saveImage(vehicleId, file);
     }
 
     @PutMapping("/{imageId}")
-    public Image updateImage(@PathVariable long imageId,
+    public ResponseEntity<Image> updateImage(@PathVariable long imageId,
             @RequestParam("file") MultipartFile file) throws Exception {
         return imageService.updateImage(imageId, file);
     }
 
     @PutMapping("/vh/{vehicleId}")
-    public Image updateImageByVehicleId(@PathVariable long vehicleId,
+    public ResponseEntity<Image> updateImageByVehicleId(@PathVariable long vehicleId,
             @RequestParam("file") MultipartFile file) throws Exception {
         return imageService.updateImageByVehicleId(vehicleId, file);
     }
 
     @DeleteMapping("/{imageId}")
-    public ResponseEntity<String> deleteImage(@PathVariable long imageId)
+    public ResponseEntity<?> deleteImage(@PathVariable long imageId)
         throws Exception {
         return imageService.deleteImage(imageId);
     }

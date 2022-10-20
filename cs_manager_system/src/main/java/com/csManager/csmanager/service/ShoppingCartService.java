@@ -13,16 +13,19 @@ import org.springframework.http.ResponseEntity;
  * ShoppingCartService
  */
 public interface ShoppingCartService {
-    List<ShoppingCart> getAllShoppingCarts();
-    ShoppingCart getShoppingCartById(long shoppingCartId)
+    ResponseEntity<List<ShoppingCart>> getAllShoppingCarts();
+    ResponseEntity<ShoppingCart> getShoppingCartById(long shoppingCartId)
             throws ShoppingCartNotFoundException;
-    ShoppingCart getShoppingCartClientId(String clientId) throws ClientNotFoundException;
-    ShoppingCart updateShoppingCart(long shoppingCartId, ShoppingCart updatedShoppingCart)
+    ResponseEntity<ShoppingCart> getShoppingCartClientId(String clientId)
+            throws ClientNotFoundException;
+    ResponseEntity<ShoppingCart> updateShoppingCart(long shoppingCartId, ShoppingCart updatedShoppingCart)
             throws ShoppingCartNotFoundException;
-    ShoppingCart partialUpdateShoppingCart(long shoppingCartId, Map<Object, Object> fields)
-        throws ShoppingCartNotFoundException;
-    ResponseEntity<String> deleteShoppingCart(long shoppingCartId)
+    ResponseEntity<ShoppingCart> partialUpdateShoppingCart(long shoppingCartId, Map<Object, Object> fields)
             throws ShoppingCartNotFoundException;
-    ShoppingCart createShoppingCart(String clientId, ShoppingCart shoppingCart) throws ClientNotFoundException;
-    ShoppingCart dropVehicleOfShoppingCart(long shoppingCartId, long vehicleId) throws Exception;
+    ResponseEntity<?> deleteShoppingCart(long shoppingCartId)
+            throws ShoppingCartNotFoundException;
+    ResponseEntity<ShoppingCart> createShoppingCart(String clientId, ShoppingCart shoppingCart)
+            throws ClientNotFoundException;
+    ResponseEntity<ShoppingCart> dropVehicleOfShoppingCart(long shoppingCartId, long vehicleId)
+            throws Exception;
 }

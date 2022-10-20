@@ -35,42 +35,42 @@ public class InvoiceController {
     }
 
     @GetMapping
-    public List<Invoice> getAllInvoices() {
+    public ResponseEntity<List<Invoice>> getAllInvoices() {
         return invoiceService.getAllInvoices();
     }
 
     @GetMapping("/{invoiceId}")
-    public Invoice getInvoiceById(@PathVariable long invoiceId)
+    public ResponseEntity<Invoice> getInvoiceById(@PathVariable long invoiceId)
         throws InvoiceNotFoundException {
         return invoiceService.getInvoiceById(invoiceId);
     }
 
     @GetMapping("/c/{clientId}")
-    public List<Invoice> getAllInvoicesByClientId(@PathVariable String clientId)
+    public ResponseEntity<List<Invoice>> getAllInvoicesByClientId(@PathVariable String clientId)
         throws ClientNotFoundException {
         return invoiceService.getAllInvoicesByClientId(clientId);
     }
 
     @PostMapping("/c/{clientId}")
-    public Invoice createInovice(@RequestBody Invoice invoice,
+    public ResponseEntity<Invoice> createInovice(@RequestBody Invoice invoice,
             @PathVariable String clientId) {
         return invoiceService.createInvoice(invoice, clientId);
     }
 
     @PutMapping("/{invoiceId}")
-    public Invoice updateInvoice(@RequestBody Invoice updatedInvoice,
+    public ResponseEntity<Invoice> updateInvoice(@RequestBody Invoice updatedInvoice,
             @PathVariable long invoiceId) throws InvoiceNotFoundException {
         return invoiceService.updateInvoice(invoiceId, updatedInvoice);
     }
 
     @PatchMapping("/{invoiceId}")
-    public Invoice partialUpdateInvoice(@RequestBody Map<Object, Object> fields,
+    public ResponseEntity<Invoice> partialUpdateInvoice(@RequestBody Map<Object, Object> fields,
             @PathVariable long invoiceId) throws InvoiceNotFoundException {
         return invoiceService.partialUpdateInvoice(invoiceId, fields);
     }
 
     @DeleteMapping("/{invoiceId}")
-    public ResponseEntity<String> deleteInvoice(@PathVariable long invoiceId)
+    public ResponseEntity<?> deleteInvoice(@PathVariable long invoiceId)
         throws InvoiceNotFoundException {
         return invoiceService.deletInvoice(invoiceId);
     }

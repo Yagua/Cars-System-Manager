@@ -37,7 +37,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCart createShoppingCart(String clientId, ShoppingCart shoppingCart)
+    public ResponseEntity<ShoppingCart> createShoppingCart(String clientId, ShoppingCart shoppingCart)
         throws ClientNotFoundException {
         Client client = clientRepository.findById(clientId)
             .orElseThrow(() -> new ClientNotFoundException(
@@ -45,36 +45,40 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                             clientId)));
         client.setShoppingCart(shoppingCart); // replace for an empty shopping cart
         clientRepository.save(client);
-        return client.getShoppingCart();
+        ShoppingCart clientCart = client.getShoppingCart();
+        return ResponseEntity.ok(clientCart);
     }
 
     @Override
-    public List<ShoppingCart> getAllShoppingCarts() {
-        return shoppingCartRepository.findAll();
+    public ResponseEntity<List<ShoppingCart>> getAllShoppingCarts() {
+        List<ShoppingCart> carts = shoppingCartRepository.findAll();
+        return ResponseEntity.ok(carts);
     }
 
     @Override
-    public ShoppingCart getShoppingCartById(long shoppingCartId)
+    public ResponseEntity<ShoppingCart> getShoppingCartById(long shoppingCartId)
         throws ShoppingCartNotFoundException {
         ShoppingCart cart = shoppingCartRepository.findById(shoppingCartId)
             .orElseThrow(() -> new ShoppingCartNotFoundException(
                         String.format("Shopping Cart identified with '%d' not found",
                             shoppingCartId)));
-        return cart;
+
+        return ResponseEntity.ok(cart);
     }
 
     @Override
-    public ShoppingCart getShoppingCartClientId(String clientId)
+    public ResponseEntity<ShoppingCart> getShoppingCartClientId(String clientId)
         throws ClientNotFoundException {
         Client client = clientRepository.findById(clientId)
             .orElseThrow(() -> new ClientNotFoundException(
                         String.format("Client identified with '%s' not found",
                             clientId)));
-        return client.getShoppingCart();
+        ShoppingCart cart = client.getShoppingCart();
+        return ResponseEntity.ok(cart);
     }
 
     @Override
-    public ShoppingCart updateShoppingCart(long shoppingCartId, ShoppingCart updatedShoppingCart)
+    public ResponseEntity<ShoppingCart> updateShoppingCart(long shoppingCartId, ShoppingCart updatedShoppingCart)
             throws ShoppingCartNotFoundException {
         ShoppingCart cart = shoppingCartRepository.findById(shoppingCartId)
             .orElseThrow(() -> new ShoppingCartNotFoundException(
@@ -83,11 +87,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         // cart.setCartId(updatedShoppingCart.getCartId());
         cart.setClient(updatedShoppingCart.getClient());
         cart.setVehicles(updatedShoppingCart.getVehicles());
-        return shoppingCartRepository.save(cart);
+
+        ShoppingCart savedCart = shoppingCartRepository.save(cart);
+        return ResponseEntity.ok(savedCart);
     }
 
     @Override
-    public ShoppingCart partialUpdateShoppingCart(long shoppingCartId,
+    public ResponseEntity<ShoppingCart> partialUpdateShoppingCart(long shoppingCartId,
             Map<Object, Object> fields) throws ShoppingCartNotFoundException {
         ShoppingCart cart = shoppingCartRepository.findById(shoppingCartId)
             .orElseThrow(() -> new ShoppingCartNotFoundException(
@@ -100,23 +106,24 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             ReflectionUtils.setField(field, cart, value);
         });
 
-        return shoppingCartRepository.save(cart);
+        ShoppingCart updatedCart = shoppingCartRepository.save(cart);
+
+        return ResponseEntity.ok(updatedCart);
     }
 
     @Override
-    public ResponseEntity<String> deleteShoppingCart(long shoppingCartId)
+    public ResponseEntity<?> deleteShoppingCart(long shoppingCartId)
         throws ShoppingCartNotFoundException {
         ShoppingCart cart = shoppingCartRepository.findById(shoppingCartId)
             .orElseThrow(() -> new ShoppingCartNotFoundException(
                         String.format("Shopping Cart identified with '%d' not found",
                             shoppingCartId)));
         shoppingCartRepository.delete(cart);
-        return ResponseEntity.ok(String.format("ShoppingCart '%d' deleted",
-                    shoppingCartId));
+        return ResponseEntity.noContent().build();
     }
 
     @Override
-    public ShoppingCart dropVehicleOfShoppingCart(long shoppingCartId,
+    public ResponseEntity<ShoppingCart> dropVehicleOfShoppingCart(long shoppingCartId,
             long vehicleId) throws Exception {
         ShoppingCart cart = shoppingCartRepository.findById(shoppingCartId)
             .orElseThrow(() -> new ShoppingCartNotFoundException(
@@ -128,6 +135,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                             vehicleId)));
         vehicle.setShoppingCart(null);
         cart.getVehicles().remove(vehicle);
-        return shoppingCartRepository.save(cart);
+        ShoppingCart savedCart  = shoppingCartRepository.save(cart);
+        return ResponseEntity.ok(savedCart);
     }
 }

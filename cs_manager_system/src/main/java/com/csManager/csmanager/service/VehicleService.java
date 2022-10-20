@@ -13,12 +13,12 @@ import org.springframework.http.ResponseEntity;
  * VehicleService
  */
 public interface VehicleService {
-    List<Vehicle> getAllVehicles();
-    List<Vehicle> getAllVehiclesByShoppingCartId(long shoppingCartId) throws ShoppingCartNotFoundException;
-    Vehicle getVehicleById(long vehicleId) throws VehicleNotFoundException;
-    Vehicle createVehicle(Vehicle vehicle);
-    Vehicle updateVehicle(long vehicleId, Vehicle updatedVehicle) throws VehicleNotFoundException;;
-    Vehicle partialUpdateVehicle(long vehicleId, Map<Object, Object> fields) throws VehicleNotFoundException;;
-    ResponseEntity<String> deleteVehicle(long vehicleId) throws VehicleNotFoundException;;
-    Vehicle addVehicleToShoppingCart(long shoppingCartId, long vehicleId) throws Exception;
+    ResponseEntity<List<Vehicle>> getAllVehicles();
+    ResponseEntity<List<Vehicle>> getAllVehiclesByShoppingCartId(long shoppingCartId) throws ShoppingCartNotFoundException;
+    ResponseEntity<Vehicle> getVehicleById(long vehicleId) throws VehicleNotFoundException;
+    ResponseEntity<Vehicle> createVehicle(Vehicle vehicle);
+    ResponseEntity<Vehicle> updateVehicle(long vehicleId, Vehicle updatedVehicle) throws VehicleNotFoundException;;
+    ResponseEntity<Vehicle> partialUpdateVehicle(long vehicleId, Map<Object, Object> fields) throws VehicleNotFoundException;;
+    ResponseEntity<?> deleteVehicle(long vehicleId) throws VehicleNotFoundException;;
+    ResponseEntity<Vehicle> addVehicleToShoppingCart(long shoppingCartId, long vehicleId) throws Exception;
 }

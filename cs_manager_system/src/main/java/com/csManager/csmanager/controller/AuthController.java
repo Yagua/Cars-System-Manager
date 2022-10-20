@@ -5,6 +5,7 @@ import com.csManager.csmanager.exception.ClientNotFoundException;
 import com.csManager.csmanager.payload.ClientDTO;
 import com.csManager.csmanager.service.ClientService;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,14 +27,14 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public Client loginClient(@RequestBody ClientDTO loginDTO)
+    public ResponseEntity<Client> loginClient(@RequestBody ClientDTO loginDTO)
         throws ClientNotFoundException {
         return clientService.loginClient(loginDTO.getUserName(),
                 loginDTO.getPassword());
     }
 
     @PatchMapping("/update-password")
-    public Client changePassword(@RequestBody ClientDTO client)
+    public ResponseEntity<Client> changePassword(@RequestBody ClientDTO client)
         throws ClientNotFoundException {
         return clientService.changePassword( client.getUserName(),
                 client.getPassword());

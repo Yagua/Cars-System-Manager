@@ -13,12 +13,12 @@ import org.springframework.web.multipart.MultipartFile;
  * ImageService
  */
 public interface ImageService {
-    Image getImageById(long imageId) throws ImageNotFoundException;
-    Image getImageByName(String imageName) throws ImageNotFoundException;
-    Image getImageByVehicleId(long vehicleId) throws VehicleNotFoundException;
-    List<Image> getAllImages();
-    Image saveImage(long vehicleId, MultipartFile file) throws Exception;
-    Image updateImage(long imageId, MultipartFile file) throws Exception;
-    Image updateImageByVehicleId(long vehicleId, MultipartFile file) throws Exception;
-    ResponseEntity<String> deleteImage(long imageId) throws Exception;
+    ResponseEntity<Image> getImageById(long imageId) throws ImageNotFoundException;
+    ResponseEntity<Image> getImageByName(String imageName) throws ImageNotFoundException;
+    ResponseEntity<Image> getImageByVehicleId(long vehicleId) throws VehicleNotFoundException;
+    ResponseEntity<List<Image>> getAllImages();
+    ResponseEntity<Image> saveImage(long vehicleId, MultipartFile file) throws Exception;
+    ResponseEntity<Image> updateImage(long imageId, MultipartFile file) throws Exception;
+    ResponseEntity<Image> updateImageByVehicleId(long vehicleId, MultipartFile file) throws Exception;
+    ResponseEntity<?> deleteImage(long imageId) throws Exception;
 }

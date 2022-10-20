@@ -33,46 +33,46 @@ public class VehicleController {
     }
 
     @GetMapping
-    public List<Vehicle> getAllVehicles() {
+    public ResponseEntity<List<Vehicle>> getAllVehicles() {
         return vehicleService.getAllVehicles();
     }
 
     @GetMapping("/sc/{shoppingCartId}")
-    public List<Vehicle> getAllVehiclesByInvoiceId(@PathVariable long shoppingCartId) {
+    public ResponseEntity<List<Vehicle>> getAllVehiclesByInvoiceId(@PathVariable long shoppingCartId) {
         return vehicleService.getAllVehiclesByShoppingCartId(shoppingCartId);
     }
 
     @GetMapping("/{vehicleId}")
-    public Vehicle getVehicleById(@PathVariable long vehicleId)
+    public ResponseEntity<Vehicle> getVehicleById(@PathVariable long vehicleId)
         throws VehicleNotFoundException {
         return vehicleService.getVehicleById(vehicleId);
     }
 
     @PostMapping
-    public Vehicle createVehicle(@RequestBody Vehicle vehicle) {
+    public ResponseEntity<Vehicle> createVehicle(@RequestBody Vehicle vehicle) {
         return vehicleService.createVehicle(vehicle);
     }
 
     @PutMapping("/{vehicleId}")
-    public Vehicle updateVehicle(@PathVariable long vehicleId,
+    public ResponseEntity<Vehicle> updateVehicle(@PathVariable long vehicleId,
             @RequestBody Vehicle updatedVehicle) throws VehicleNotFoundException {
         return vehicleService.updateVehicle(vehicleId, updatedVehicle);
     }
 
     @PatchMapping("/{vehicleId}")
-    public Vehicle partialUpdateVehicle(@PathVariable long vehicleId,
+    public ResponseEntity<Vehicle> partialUpdateVehicle(@PathVariable long vehicleId,
             @RequestBody Map<Object, Object> fields) throws VehicleNotFoundException {
         return vehicleService.partialUpdateVehicle(vehicleId, fields);
     }
 
     @DeleteMapping("/{vehicleId}")
-    public ResponseEntity<String> deleteVehicle(@PathVariable long vehicleId)
+    public ResponseEntity<?> deleteVehicle(@PathVariable long vehicleId)
         throws VehicleNotFoundException {
         return vehicleService.deleteVehicle(vehicleId);
     }
 
     @PostMapping("/{vehicleId}/sc/{shoppingCartId}")
-    public Vehicle addVehicleToShoppingCartId(@PathVariable long vehicleId,
+    public ResponseEntity<Vehicle> addVehicleToShoppingCartId(@PathVariable long vehicleId,
             @PathVariable long shoppingCartId) throws Exception {
         return vehicleService.addVehicleToShoppingCart(shoppingCartId, vehicleId);
     }
